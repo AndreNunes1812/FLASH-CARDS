@@ -3,7 +3,8 @@ import PropTypes from 'prop-types'
 import { reduxForm } from 'redux-form'
 import { bindActionCreators } from "redux"
 import { connect } from 'react-redux'
-import { funcAddCard, funcGetCards } from '../../actions/cards'
+import { setCard, remover,getCards, saveKey, getKey } from '../Storage'
+import { funcSetCards } from '../../actions/cards'
 
 import {
     View,
@@ -11,14 +12,14 @@ import {
     StyleSheet,
     TouchableOpacity,
     Text,
-    Alert,
-    AsyncStorage
+    Alert
+
 } from 'react-native'
 
 class Card extends Component {
 
+    cards= []
     
-
     constructor(props) {
         super(props)
 
@@ -26,34 +27,59 @@ class Card extends Component {
             card: ''
         }
         this._onPress = this._onPress.bind(this)
+        this._atualizarCards = this._atualizarCards.bind(this)
     }
 
     componentDidMount = async () => {
-       // console.log('ler:', this.props.cards)
+        // console.log('ler:', this.props.cards)
         // data = await AsyncStorage.getItem('@MySuperStore:cards')
         // if (data != null) {
         //     this.cards = JSON.parse(data);
         // }
-        this.props.dispatch(funcGetCards())
+        //  this.props.dispatch(funcSetCards())
     }
 
     _onPress = () => {
+        // this.props.dispatch(funcAddCard(this.state.card, Math.random))
 
-        //  this.props.funcAddCard(this.state.card)
-        this.props.dispatch(funcAddCard(this.state.card))
-
-
-        //        this.cards.push(this.state.card)
-
-        //        console.log('newCard', this.cards)
-        // try {
-        //     await AsyncStorage.setItem('@MySuperStore:cards', JSON.stringify(this.cards));
-        // } catch (error) {
-        // }
+        let card = this.state.card
+        saveKey( {[card]: {title: card, 'questions':[] } } , card).then(() =>{
+            console.log('Apos salvar valores')
+            this._atualizarCards()
+        })
+        //setCard( {[card]: {title: card, 'questions':[] } } )
 
         Alert.alert('Card salvo com sucesso!');
-
     }
+
+    _atualizarCards() {
+        getCards().then((retorno)=> {
+            console.log('retorno dentro do CARD:', retorno)
+            this.cards= retorno
+            this.props.funcSetCards(retorno)       
+        });       
+    }
+
+    _onPressLer = () => {
+        let card = this.state.card
+        getKey(card)
+
+
+
+        Alert.alert('Card _onPressLer!');
+    }
+
+
+    _onPressRemover = () => {
+        // this.props.dispatch(funcAddCard(this.state.card, Math.random))
+        let card = this.state.card
+        data = remover(card)
+        .then(() => {
+             console.log('remover:', JSON.stringify(data))
+        })
+        Alert.alert('Card removido com sucesso!');
+    }
+
 
     render() {
 
@@ -72,6 +98,20 @@ class Card extends Component {
                         <Text>Salvar</Text>
                     </View>
                 </TouchableOpacity>
+
+                
+                <TouchableOpacity onPress={this._onPressLer}>
+                    <View style={styles.button}>
+                        <Text>Ler</Text>
+                    </View>
+                </TouchableOpacity>
+
+                <TouchableOpacity onPress={this._onPressRemover}>
+                    <View style={styles.button}>
+                        <Text>Remover</Text>
+                    </View>
+                </TouchableOpacity>
+
             </View >
         )
     }
@@ -94,21 +134,22 @@ const styles = StyleSheet.create({
 })
 
 Card.propTypes = {
-    funcAddCard: PropTypes.func.isRequired,
+    funcSetCards: PropTypes.func.isRequired,
 
 }
 
 const mapStateToProps = (state) => {
     console.log('State:', state)
     return {
-        cards: state.card,
+        cards: state.cards,
+        cardsUpdate: this.cards
     }
 }
 
 const mapDispatchToProps = (dispatch) => {
     return (bindActionCreators({
-        funcAddCard: (cards) => funcAddCard(cards),
-        funcGetCards: () => funcGetCards()
+       // funcAddCard: (cards) => funcAddCard(cards),
+        funcSetCards: (cardsUpdate) => funcSetCards(cardsUpdate)
     }, dispatch))
 }
 

@@ -1,62 +1,69 @@
-import React, { Component } from 'react'
+import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
 import { reduxForm } from 'redux-form'
 import { bindActionCreators } from "redux"
 import { connect } from 'react-redux'
-import { View, StyleSheet, Text, FlatList } from 'react-native'
-import { funcGetCards } from '../../actions/cards'
+import { View, StyleSheet, Text, FlatList, List, ListItem } from 'react-native'
+import { funcSetCards } from '../../actions/cards'
+import { getKey, getCards } from '../Storage'
 
-class ListagemCard extends Component {
+class ListagemCard extends  PureComponent {
 
-    cards = new Array()
+    cards = []
+    counter= 0
 
     constructor(props) {
         super(props)
     }
 
     state = {
-        cards: [
-            { id: '1', 'descricao': 'Descricao 1' },
-            { id: '2', 'descricao': 'Descricao 2' },
-            { id: '3', 'descricao': 'Descricao 3' },
-            { id: '4', 'descricao': 'Descricao 4' },
-            { id: '5', 'descricao': 'Descricao 5' },
-            { id: '6', 'descricao': 'Descricao 6' },
-            { id: '7', 'descricao': 'Descricao 7' },
-            { id: '8', 'descricao': 'Descricao 8' },
-            { id: '9', 'descricao': 'Descricao 9' },
-
-        ]
+        cards: []
     }
 
     componentDidMount() {
-       console.log('didmount:', this.navegacao)
-       this.props.dispatch(funcGetCards())
+
+        getCards().then((retorno) => {
+            console.log('retorno:', retorno)
+
+       
+            this.setState({ cards: retorno }, () => {
+                 console.log('setState:', this.state.cards)
+                this.props.funcSetCards(retorno)
+            })
+        });
+
     }
 
     componentWillMount() {
-        console.log('componentWillMount:', this.navegacao)
+        // console.log('componentWillMount:', this.navegacao)
     }
 
 
-    _keyExtractor = (item, index) => item.id;
+    _keyExtractor = (item , index) => {
+        item
+        //Object.keys(item)[0]
+    }; 
 
     render() {
-
+        console.log('STATE :', this.state.cards)
         return (
             <View style={styles.container}>
                 <FlatList
                     data={this.state.cards}
                     showsVerticalScrollIndicator={false}
-                    extraData={this.state.cards}
-                    keyExtractor={this._keyExtractor}
-                    renderItem={({ item }) =>
+                   // extraData={this.state.cards}
+                    keyExtractor={ (item) => Object.keys(item)[0] }
+                    renderItem={( item ) => {                        
+                        const key = Object.keys(item)[0];
+                        const itemDetail = item[key];
+                       
                         <View style={styles.container}>
-                            <Text style={styles.texto}>{item.descricao}</Text>
-                            <Text style={styles.texto}>{item.id}</Text>
+                            {console.log('itemDetail:',itemDetail.title)}
+                            <Text style={styles.texto}>{itemDetail.title}</Text>
+                            {/* <Text style={styles.texto}>{item.id}</Text> */}
 
                         </View>
-                    }
+                    }}
                 />
             </View>
         );
@@ -79,26 +86,27 @@ const styles = StyleSheet.create({
         fontSize: 15,
         paddingTop: 20,
         fontWeight: 'bold',
-        
+
     }
 });
 
 ListagemCard.propTypes = {
-    funcGetCards: PropTypes.func.isRequired,
+    funcSetCards: PropTypes.func.isRequired,
 
 }
 
 
 const mapStateToProps = (state) => {
-    console.log('State Listagem:', state)
+    console.log('State Listagem:', state.cards)
     return {
-        cards: state.card,
+        cardsReducer: state.card,
+        sendCards: this.cards
     }
 }
 
 const mapDispatchToProps = (dispatch) => {
     return (bindActionCreators({
-        funcGetCards: () => funcGetCardss(),
+        funcSetCards: (sendCards) => funcSetCards(sendCards),
     }, dispatch))
 }
 

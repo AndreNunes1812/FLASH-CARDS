@@ -1,39 +1,20 @@
-import { ADD_CARD, GET_CARDS } from '../actions/cards'
-import { AsyncStorage } from 'react-native'
+import { ADD_CARD, SET_CARDS } from '../actions/cards'
 
-cards = new Array()
+export default function index(state = [], action) {
 
-addCardStorage = async(card, cards) => {
-    console.log('addCardStorage:', card , cards)
-    try {
-        cards.push(card)
-        await AsyncStorage.setItem('@MySuperStore:cards', JSON.stringify(cards));
-    } catch (error) {
-    }
-}
-
-export default function index (state = [] , action  ) {
-    console.log('reducers ')
     switch (action.type) {
-       
-        case ADD_CARD:
-           console.log('reducers cards:', action)
-           addCardStorage (action.card , cards)
-            return [ ...state ,  {  
-                card: action.card,
-            }]   
+        case SET_CARDS:
+            console.log('SET CARDS NO REDUCER:', action.cards)
 
-        case GET_CARDS:
-            console.log('GET CARDS NO REDUCER:', action.card)
-            
-             return [ ...state ,  {  
-                 card: action.card,
-             }]   
- 
-        case 'SET_CARDS':
-            return action.cards;
+            if (action.cards !== undefined) {
+                return [...state, {
+                    cards: action.cards,
+                }]
+            } else {
+                return state
+            }
+
         default:
-            console.log('default ok:', action)
             return state;
     }
 }
