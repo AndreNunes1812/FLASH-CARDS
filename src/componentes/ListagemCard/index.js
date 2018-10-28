@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { reduxForm } from 'redux-form'
 import { bindActionCreators } from "redux"
 import { connect } from 'react-redux'
-import { View, StyleSheet, Text, FlatList, List, ListItem } from 'react-native'
+import { View, StyleSheet, Text, FlatList } from 'react-native'
 import { funcSetCards } from '../../actions/cards'
 import { getKey, getCards } from '../Storage'
 
