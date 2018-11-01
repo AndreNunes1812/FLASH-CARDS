@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { reduxForm } from 'redux-form'
 import { bindActionCreators } from "redux"
 import { connect } from 'react-redux'
-import { setCard, remover,getCards, saveKey, getKey } from '../Storage'
+import { setCard, remover, getCards, saveKey, getKey } from '../Storage'
 import { funcSetCards } from '../../actions/cards'
 
 import {
@@ -18,8 +18,8 @@ import {
 
 class Card extends Component {
 
-    cards= []
-    
+    cards = []
+
     constructor(props) {
         super(props)
 
@@ -28,55 +28,39 @@ class Card extends Component {
         }
         this._onPress = this._onPress.bind(this)
         this._atualizarCards = this._atualizarCards.bind(this)
-    }
-
-    componentDidMount = async () => {
-        // console.log('ler:', this.props.cards)
-        // data = await AsyncStorage.getItem('@MySuperStore:cards')
-        // if (data != null) {
-        //     this.cards = JSON.parse(data);
-        // }
-        //  this.props.dispatch(funcSetCards())
+        this._removerCard = this._removerCard.bind(this)
     }
 
     _onPress = () => {
-        // this.props.dispatch(funcAddCard(this.state.card, Math.random))
-
         let card = this.state.card
-        saveKey( {[card]: {title: card, 'questions':[] } } , card).then(() =>{
-            console.log('Apos salvar valores')
-            this._atualizarCards()
-        })
-        //setCard( {[card]: {title: card, 'questions':[] } } )
-
-        Alert.alert('Card salvo com sucesso!');
+        saveKey({ [card]: { title: card, 'questions': [] } }, card)
+        console.log('Apos salvar valores')
+        this._atualizarCards()
+        Alert.alert('Card salvo com sucesso!,');
     }
 
-    _atualizarCards() {
-        getCards().then((retorno)=> {
-            console.log('retorno dentro do CARD:', retorno)
-            this.cards= retorno
-            this.props.funcSetCards(retorno)       
-        });       
+    async _atualizarCards() {
+        console.log('_atualizarCards')
+        data = await  getCards().then((data) =>{
+            this.props.funcSetCards(data)
+        })
     }
 
     _onPressLer = () => {
         let card = this.state.card
         getKey(card)
-
-
-
         Alert.alert('Card _onPressLer!');
     }
 
 
-    _onPressRemover = () => {
-        // this.props.dispatch(funcAddCard(this.state.card, Math.random))
-        let card = this.state.card
-        data = remover(card)
-        .then(() => {
-             console.log('remover:', JSON.stringify(data))
-        })
+    _onPressRemover = () => {        
+        this._removerCard(this.state.card)        
+    }
+
+    async _removerCard(rmCard) {
+        data = await remover(rmCard).then(() => {
+            this._atualizarCards()
+        })          
         Alert.alert('Card removido com sucesso!');
     }
 
@@ -99,7 +83,7 @@ class Card extends Component {
                     </View>
                 </TouchableOpacity>
 
-                
+
                 <TouchableOpacity onPress={this._onPressLer}>
                     <View style={styles.button}>
                         <Text>Ler</Text>
@@ -148,7 +132,7 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return (bindActionCreators({
-       // funcAddCard: (cards) => funcAddCard(cards),
+        // funcAddCard: (cards) => funcAddCard(cards),
         funcSetCards: (cardsUpdate) => funcSetCards(cardsUpdate)
     }, dispatch))
 }

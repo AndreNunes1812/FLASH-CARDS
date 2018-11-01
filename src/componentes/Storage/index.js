@@ -52,7 +52,7 @@ export async function saveKey(value, card) {
     console.log('Save:', value, card)
 
     try {
-        await AsyncStorage.mergeItem(card, JSON.stringify(value));
+       await AsyncStorage.mergeItem(card, JSON.stringify(value));
     } catch (error) {
         console.log("Error saving data" + error);
     }
@@ -61,17 +61,19 @@ export async function saveKey(value, card) {
 export async function getCards() {
 
     const arrayAndre = []
-    let storage = await AsyncStorage.getAllKeys().then((storage)=> {
+    const andreMap = new Map()
+    await AsyncStorage.getAllKeys().then((storage)=> {
         storage.forEach(async k => {
             const value = await AsyncStorage.getItem(k).then((value)=> {
                 console.log(k);
                 console.log(value);
                 arrayAndre.push( JSON.parse(value))
+                andreMap.set(k,value)
                 console.log('sss', JSON.parse(value));
                   
             });
-            console.log('arrayAndre ', arrayAndre)
-            return arrayAndre
+           
+            return andreMap
         });
     })
 
@@ -94,8 +96,7 @@ export async function getCards() {
 export async function remover(key) {
 
     try {
-        await AsyncStorage.removeItem(key);
-        return true;
+      return await AsyncStorage.removeItem(key);
     }
     catch (exception) {
         return false;

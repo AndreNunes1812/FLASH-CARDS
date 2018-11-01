@@ -4,6 +4,8 @@ import { View, StyleSheet, Alert, TouchableOpacity, Text } from 'react-native'
 import ListagemCard from '../ListagemCard/index'
 import Footer from '../Footer/index'
 import Card from '../Card/index'
+import CardNumber from '../CardNumber/index'
+
 
 import { createStackNavigator } from 'react-navigation'
 
@@ -20,7 +22,6 @@ class Montagem extends Component {
     render() {
         return (
             <View style={styles.container} >
-                {/* < Header /> */}
                 < ListagemCard navegacao={this.props} />
                 < Footer navegacao={this.props}/>
             </View>
@@ -39,21 +40,32 @@ const MontagemApp = createStackNavigator({
     Montagem: {
         screen: Montagem,
         navigationOptions: ({ navigation }) => ({
-            title: 'FLASH-CARDS',
+            title: 'BARALHO',
             headerTitleStyle: { color: 'white', },                
             headerStyle: {
                 backgroundColor: '#2196F3',
             },
         })
     },
-    Card: { screen: Card ,
+    CardNumber: { screen: CardNumber ,
         navigationOptions: ({ navigation }) => ({
-            title: 'Adcionar Card',
+            title: 'CARTAÕS',
             headerTitleStyle: { color: 'white' },
             headerStyle: {
                 backgroundColor: '#2196F3',
             }
-        }) },
+        }) 
+    },
+    Card: { screen: Card ,
+        navigationOptions: ({ navigation }) => ({
+            title: 'ADCIONAR BARALHO',
+            headerTitleStyle: { color: 'white' },
+            headerStyle: {
+                backgroundColor: '#2196F3',
+            }
+        }) 
+     },
+     
 })
 
 export default MontagemApp;

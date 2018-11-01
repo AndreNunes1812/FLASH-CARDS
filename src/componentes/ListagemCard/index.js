@@ -3,15 +3,13 @@ import PropTypes from 'prop-types'
 import { reduxForm } from 'redux-form'
 import { bindActionCreators } from "redux"
 import { connect } from 'react-redux'
-import { View, StyleSheet, Text, FlatList } from 'react-native'
+import { View, StyleSheet, Text, FlatList, TouchableWithoutFeedback  } from 'react-native'
 import { funcSetCards } from '../../actions/cards'
-import { getKey, getCards } from '../Storage'
+import { getCards } from '../Storage'
 
-class ListagemCard extends  PureComponent {
+class ListagemCard extends PureComponent {
 
     cards = []
-    counter= 0
-
     constructor(props) {
         super(props)
     }
@@ -25,81 +23,107 @@ class ListagemCard extends  PureComponent {
         getCards().then((retorno) => {
             console.log('retorno:', retorno)
 
-       
             this.setState({ cards: retorno }, () => {
-                 console.log('setState:', this.state.cards)
+                console.log('setState:', this.state.cards)
                 this.props.funcSetCards(retorno)
             })
         });
-
     }
 
     componentWillMount() {
-        // console.log('componentWillMount:', this.navegacao)
     }
 
 
-    _keyExtractor = (item , index) => {
+    _keyExtractor = (item) => {
         item
-        //Object.keys(item)[0]
-    }; 
+    };
 
     render() {
         console.log('STATE :', this.state.cards)
+        console.log('cardsReducer :', this.props.cardsReducer)
+        cardsNew= []
+        if (this.props.cardsReducer[0] !== undefined) {
+            const  { cards } = this.props.cardsReducer[0]
+            console.log('cardsNew :', cards)  
+            cardsNew = cards
+        }  
+        
         return (
-            <View style={styles.container}>
-                <FlatList
-                    data={this.state.cards}
-                    showsVerticalScrollIndicator={false}
-                   // extraData={this.state.cards}
-                    keyExtractor={ (item) => Object.keys(item)[0] }
-                    renderItem={( item ) => {                        
-                        const key = Object.keys(item)[0];
-                        const itemDetail = item[key];
-                       
-                        <View style={styles.container}>
-                            {console.log('itemDetail:',itemDetail.title)}
-                            <Text style={styles.texto}>{itemDetail.title}</Text>
-                            {/* <Text style={styles.texto}>{item.id}</Text> */}
 
+            <FlatList
+                data={cardsNew}
+                keyExtractor={(item) => Object.keys(item)[0] }
+                renderItem={({ item }) => {
+                    console.log('Item:', item)
+                    const key = Object.keys(item)[0];
+                    let itemDetail = item[key];
+                    return (
+
+                        <View>
+                            <TouchableWithoutFeedback onPress={() =>  this.props.navegacao.navigation.navigate('CardNumber', {
+                                quantidade: itemDetail.questions.length,
+                                titulo: itemDetail.title })}>
+                                <View>
+                                <Text style={styles.texto}>
+                                    {itemDetail.title}
+                                </Text>
+                                <Text style={styles.textoLength}>
+                                    ({itemDetail.questions.length})
+                                   
+                                </Text>  
+             
+                                </View>
+                            </TouchableWithoutFeedback>
                         </View>
-                    }}
-                />
-            </View>
+                    )
+                }}
+            />
+
         );
     }
+
+    actionOnRow(item) {
+        console.log('Selected Item :',item);
+        
+     }
 }
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
         flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
 
     },
     box2: {
-        backgroundColor: 'white',
+        backgroundColor: 'blue',
         //  height: 480,
     },
     texto: {
-        //justifyContent: 'center',
-        color: 'green',
+        color: '#2196F3',
         fontSize: 15,
         paddingTop: 20,
         fontWeight: 'bold',
-
+    },
+    textoLength: {
+        color: 'black',
+        fontSize: 15,
+        paddingTop: 20,
+        paddingLeft: 15,
+        fontWeight: 'bold',
     }
 });
 
 ListagemCard.propTypes = {
     funcSetCards: PropTypes.func.isRequired,
-
 }
 
 
 const mapStateToProps = (state) => {
     console.log('State Listagem:', state.cards)
     return {
-        cardsReducer: state.card,
+        cardsReducer: state.cards,
         sendCards: this.cards
     }
 }

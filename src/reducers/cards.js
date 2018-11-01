@@ -7,6 +7,7 @@ export default function index(state = [], action) {
             console.log('SET CARDS NO REDUCER:', action.cards)
 
             if (action.cards !== undefined) {
+                state = []
                 return [...state, {
                     cards: action.cards,
                 }]

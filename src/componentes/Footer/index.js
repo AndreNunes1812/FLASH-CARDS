@@ -14,7 +14,7 @@ export default class Footer extends Component {
                 <View style={styles.box1}>
                     <TouchableOpacity  onPress={() => this.props.navegacao.navigation.navigate('Card')}>
                         <View style={styles.button}>
-                            <Text style={styles.buttonText}>ADD</Text>
+                            <Text style={styles.buttonText}> ADCIONAR BARALHO</Text>
                         </View>
                     </TouchableOpacity>
                 </View>
