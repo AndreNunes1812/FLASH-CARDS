@@ -5,11 +5,13 @@ import { bindActionCreators } from "redux"
 import { connect } from 'react-redux'
 import { View, StyleSheet, Text, FlatList, TouchableWithoutFeedback  } from 'react-native'
 import { funcSetCards } from '../../actions/cards'
-import { getCards } from '../Storage'
+import { getCards, remover } from '../Storage'
 
 class ListagemCard extends PureComponent {
 
     cards = []
+    quantidade = 0
+
     constructor(props) {
         super(props)
     }
@@ -20,31 +22,29 @@ class ListagemCard extends PureComponent {
 
     componentDidMount() {
 
+        // remover('Ale')
+
         getCards().then((retorno) => {
-            console.log('retorno:', retorno)
+            // console.log('retorno:', retorno)
 
             this.setState({ cards: retorno }, () => {
-                console.log('setState:', this.state.cards)
+                // console.log('setState:', this.state.cards)
                 this.props.funcSetCards(retorno)
             })
         });
     }
-
-    componentWillMount() {
-    }
-
 
     _keyExtractor = (item) => {
         item
     };
 
     render() {
-        console.log('STATE :', this.state.cards)
-        console.log('cardsReducer :', this.props.cardsReducer)
+        // console.log('STATE :', this.state.cards)
+        // console.log('cardsReducer :', this.props.cardsReducer)
         cardsNew= []
         if (this.props.cardsReducer[0] !== undefined) {
             const  { cards } = this.props.cardsReducer[0]
-            console.log('cardsNew :', cards)  
+            // console.log('cardsNew :', cards)  
             cardsNew = cards
         }  
         
@@ -54,24 +54,51 @@ class ListagemCard extends PureComponent {
                 data={cardsNew}
                 keyExtractor={(item) => Object.keys(item)[0] }
                 renderItem={({ item }) => {
-                    console.log('Item:', item)
+                    console.log('Item Listage:', item)  
+                    console.log(' Object.keys(item)[0]:',  Object.keys(item)[0]) 
                     const key = Object.keys(item)[0];
                     let itemDetail = item[key];
+
+                    /// 
+                    const keySub = Object.values( item);
+                    console.log('key:', keySub)
+                    console.log('key 2:', keySub[0])
+        
+                    console.log('key title:', keySub[0].title)
+                    console.log('key question:', keySub[0].questions.length)
+
+                    //
+
+
+
+                    // if (itemDetail.questions.length > 0) {                        
+                    //     this.quantidade = itemDetail.questions[0].length
+                    //     // console.log('> 0:', this.quantidade)
+                    //     // console.log('itemDetail.questions:', itemDetail.questions)
+
+                        
+                    // } else {
+                    //     this.quantidade = itemDetail.questions.length 
+                    //     // console.log(' = 0', this.quantidade)
+                    //     // console.log('itemDetail.questions 2:', itemDetail.questions)
+                    // }
+
                     return (
 
                         <View>
                             <TouchableWithoutFeedback onPress={() =>  this.props.navegacao.navigation.navigate('CardNumber', {
-                                quantidade: itemDetail.questions.length,
-                                titulo: itemDetail.title })}>
+                                quantidade: keySub[0].questions.length,
+                                titulo: itemDetail.title ,
+                                item: itemDetail,
+                                questions: itemDetail.questions
+                                })}>
                                 <View>
-                                <Text style={styles.texto}>
-                                    {itemDetail.title}
-                                </Text>
-                                <Text style={styles.textoLength}>
-                                    ({itemDetail.questions.length})
-                                   
-                                </Text>  
-             
+                                    <Text style={styles.texto}>
+                                        {itemDetail.title}
+                                    </Text>
+                                    <Text style={styles.textoLength}>
+                                        ({keySub[0].questions.length})                                   
+                                    </Text>               
                                 </View>
                             </TouchableWithoutFeedback>
                         </View>

@@ -52,7 +52,6 @@ class Card extends Component {
         Alert.alert('Card _onPressLer!');
     }
 
-
     _onPressRemover = () => {        
         this._removerCard(this.state.card)        
     }

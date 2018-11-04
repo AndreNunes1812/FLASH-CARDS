@@ -5,6 +5,8 @@ import ListagemCard from '../ListagemCard/index'
 import Footer from '../Footer/index'
 import Card from '../Card/index'
 import CardNumber from '../CardNumber/index'
+import PerguntaCard from '../PerguntaCard/index'
+import QuizCard from '../QuizCard/index'
 
 
 import { createStackNavigator } from 'react-navigation'
@@ -23,7 +25,7 @@ class Montagem extends Component {
         return (
             <View style={styles.container} >
                 < ListagemCard navegacao={this.props} />
-                < Footer navegacao={this.props}/>
+                < Footer navegacao={this.props} />
             </View>
         )
     }
@@ -41,31 +43,53 @@ const MontagemApp = createStackNavigator({
         screen: Montagem,
         navigationOptions: ({ navigation }) => ({
             title: 'BARALHO',
-            headerTitleStyle: { color: 'white', },                
+            headerTitleStyle: { color: 'white', },
             headerStyle: {
                 backgroundColor: '#2196F3',
             },
         })
     },
-    CardNumber: { screen: CardNumber ,
+    CardNumber: {
+        screen: CardNumber,
         navigationOptions: ({ navigation }) => ({
-            title: 'CARTAÕS',
+            title: 'CARTOES',
             headerTitleStyle: { color: 'white' },
             headerStyle: {
                 backgroundColor: '#2196F3',
             }
-        }) 
+        })
     },
-    Card: { screen: Card ,
+    Card: {
+        screen: Card,
         navigationOptions: ({ navigation }) => ({
             title: 'ADCIONAR BARALHO',
             headerTitleStyle: { color: 'white' },
             headerStyle: {
                 backgroundColor: '#2196F3',
             }
-        }) 
-     },
-     
+        })
+    },
+    PerguntaCard: {
+        screen: PerguntaCard,
+        navigationOptions: ({ navigation }) => ({
+            title: 'ADCIONAR PERGUNTA',
+            headerTitleStyle: { color: 'white' },
+            headerStyle: {
+                backgroundColor: '#2196F3',
+            }
+        })
+    },
+    QuizCard: {
+        screen: QuizCard,
+        navigationOptions: ({ navigation }) => ({
+            title: 'QUIZ',
+            headerTitleStyle: { color: 'white' },
+            headerStyle: {
+                backgroundColor: '#2196F3',
+            }
+        })
+    },
+
 })
 
 export default MontagemApp;

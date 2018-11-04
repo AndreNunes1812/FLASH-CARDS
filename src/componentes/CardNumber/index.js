@@ -1,25 +1,20 @@
 import React, { PureComponent } from 'react'
 import PropTypes from 'prop-types'
-import { reduxForm , Field } from 'redux-form'
-import { bindActionCreators} from "redux"
-import { connect } from 'react-redux'
-import { setCard, remover, getCards, saveKey, getKey } from '../Storage'
-import { funcSetCards } from '../../actions/cards'
-import { Card, Button, ButtonGroup } from 'react-native-elements'
-
-import { createStackNavigator } from 'react-navigation'
-import PerguntaCard from '../PerguntaCard/index'
-
+import { Card, ButtonGroup } from 'react-native-elements'
 import {
     View,
     TextInput,
     StyleSheet,
-    TouchableWithoutFeedback,
+    Alert
 } from 'react-native'
 
 class CardNumber extends PureComponent {
 
     cards = []
+    titulo = ''
+    quantidade = 0
+    item = null
+    questions = []
 
     constructor(props) {
         super(props)
@@ -29,68 +24,76 @@ class CardNumber extends PureComponent {
             myNumber: 0
         }
         self = this
-
-        this.updateIndex = this.updateIndex.bind(this)
         this.onChanged = this.onChanged.bind(this)
-        this._chamadaNavegacao = this._chamadaNavegacao.bind(this)
     }
 
     updateIndex = (index) => {
         this.setState({ index })
         console.log('index:', index)
         this._chamadaNavegacao(index)
-
-    }
-
-    _chamadaNavegacao(id) {
-
-        if (id === 1) {
-            // this.props.navegacao.navigation.navigate('PerguntaCard', {
-            //     quantidade: itemDetail.questions.length,
-            //     titulo: itemDetail.title
-            // })
-        }
-
-
     }
 
     onChanged(text) {
         console.log('TEXTO:', text)
+        this.quantidade = text
     }
 
     render() {
 
         const { navigation } = this.props;
-        const quantidade = navigation.getParam('quantidade', 'NO-ID')
-        const titulo = navigation.getParam('titulo', 'card não disponivel')
+        this.item = navigation.getParam('item','NO-ID')
+        this.titulo = navigation.getParam('titulo', 'card não disponivel')
+        this.questions = navigation.getParam('questions', 'card não disponivel') 
+        this.quantidade = navigation.getParam('quantidade', 'quantidade não informada')
 
-        console.log('Navigation: ' , this.props)
+        console.log('item: ', this.item)
 
         return (
             <View >
-                    <Card title={titulo}>
-                        <View >
-                            <Field 
-                                placeholder="informe quantidade de pergunta(s)"
-                                style={styles.input}
-                                keyboardType='numeric'
-                                onChangeText={(text) => this.onChanged(text)}
-                                value={self.state.myNumber}                              
-                                maxLength={10}
-                            />
-                            <ButtonGroup
-                                selectedBackgroundColor="blue"
-                                onPress={this.updateIndex}
-                                selectedIndex={this.state.index}
-                                buttons={['Quiz', 'Perguntas']}
-                                containerStyle={{ height: 30 }} />
-                        </View>
-                    </Card>
+                <Card title={this.titulo}>
+                    <View >
+                        {/* <TextInput
+                            placeholder="informe quantidade de pergunta(s)"
+                            style={styles.input}
+                            keyboardType='numeric'
+                            onChangeText={(text) => this.onChanged(text)}
+                            // value={self.state.myNumber}
+                            maxLength={10}
+                        /> */}
 
+                        <ButtonGroup
+                            selectedBackgroundColor="blue"
+                            onPress={(index) => {
+
+                                if (index === 1) {
+                                    navigation.navigate('PerguntaCard', {
+                                        quantidade: this.quantidade,
+                                        titulo: this.titulo,
+                                        item: this.item,
+                                        questions: this.questions
+                                    })
+                                } else {
+                                    if (this.quantidade === 0) {
+                                        Alert.alert('Não a pergunta(s) para o Quiz!');
+                                    } else {
+                                        navigation.navigate('QuizCard', {
+                                            quantidade: this.quantidade,
+                                            titulo: this.titulo,
+                                            item: this.item,
+                                            questions: this.questions
+                                        })
+
+                                    }
+                                }
+                            }}
+                            selectedIndex={self.state.index}
+                            buttons={['Quiz', 'Perguntas']}
+                            containerStyle={{ height: 30 }} />
+                    </View>
+                </Card>                 
             </View>
         )
     }
-
 }
 
 const styles = StyleSheet.create({
@@ -109,44 +112,22 @@ const styles = StyleSheet.create({
     }
 })
 
-CardNumber.propTypes = {
-    funcSetCards: PropTypes.func.isRequired,
+// CardNumber.propTypes = {
+//     funcSetCards: PropTypes.func.isRequired,
 
-}
+// }
 
-const CardNumberApp = createStackNavigator({
-     PerguntaCard: { screen: PerguntaCard ,
-        navigationOptions: ({ navigation }) => ({
-            title: 'ADCIONAR PERGUNTA',
-            headerTitleStyle: { color: 'white' },
-            headerStyle: {
-                backgroundColor: '#2196F3',
-            }
-        }) 
-     },
-})
+// const CardNumberApp = createStackNavigator({
+//     CardNumber: { screen: CardNumber },
+//     PerguntaCard: { screen: PerguntaCard ,
+//         navigationOptions: ({ navigation }) => ({
+//             title: 'ADCIONAR PERGUNTA',
+//             headerTitleStyle: { color: 'white' },
+//             headerStyle: {
+//                 backgroundColor: '#2196F3',
+//             }
+//         }) 
+//      },
+// })
 
-const mapStateToProps = (state) => {
-    console.log('State:', state)
-    return {
-        cards: state.cards,
-        cardsUpdate: this.cards
-    }
-}
-
-const mapDispatchToProps = (dispatch) => {
-    return (bindActionCreators({
-        // funcAddCard: (cards) => funcAddCard(cards),
-        funcSetCards: (cardsUpdate) => funcSetCards(cardsUpdate)
-    }, dispatch))
-}
-
-
-export default connect(
-    mapStateToProps, mapDispatchToProps
-)(reduxForm({
-    form: 'cardNumber',
-    enableReinitialize: true,
-    //   validate,
-    //   warn
-})(CardNumber));
+export default CardNumber

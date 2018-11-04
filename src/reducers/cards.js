@@ -4,7 +4,7 @@ export default function index(state = [], action) {
 
     switch (action.type) {
         case SET_CARDS:
-            console.log('SET CARDS NO REDUCER:', action.cards)
+            // console.log('SET CARDS NO REDUCER:', action.cards)
 
             if (action.cards !== undefined) {
                 state = []
