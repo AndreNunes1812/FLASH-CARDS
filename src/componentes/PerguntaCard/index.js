@@ -5,7 +5,7 @@ import { bindActionCreators } from "redux"
 import { connect } from 'react-redux'
 import { setCard, remover, getCards, saveKey, getKey } from '../Storage'
 import { funcSetCards } from '../../actions/cards'
-import { Card, Button, ButtonGroup } from 'react-native-elements'
+import { Card, ButtonGroup } from 'react-native-elements'
 
 
 import {

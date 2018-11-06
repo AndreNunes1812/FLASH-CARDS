@@ -5,6 +5,7 @@ import { bindActionCreators } from "redux"
 import { connect } from 'react-redux'
 import { setCard, remover, getCards, saveKey, getKey } from '../Storage'
 import { funcSetCards } from '../../actions/cards'
+import ListagemCard from '../ListagemCard/index'
 
 import {
     View,
@@ -76,25 +77,27 @@ class Card extends Component {
                         this.setState({ card: e })
                     }}
                 />
-                <TouchableOpacity onPress={this._onPress}>
-                    <View style={styles.button}>
-                        <Text>Salvar</Text>
-                    </View>
-                </TouchableOpacity>
+                <View style={styles.containerRow}  >
+                    <TouchableOpacity onPress={this._onPress}>
+                        <View style={styles.button}>
+                            <Text>Salvar</Text>
+                        </View>
+                    </TouchableOpacity>
 
 
-                <TouchableOpacity onPress={this._onPressLer}>
-                    <View style={styles.button}>
-                        <Text>Ler</Text>
-                    </View>
-                </TouchableOpacity>
+                    {/* <TouchableOpacity onPress={this._onPressLer}>
+                        <View style={styles.button}>
+                            <Text>Ler</Text>
+                        </View>
+                    </TouchableOpacity> */}
 
-                <TouchableOpacity onPress={this._onPressRemover}>
-                    <View style={styles.button}>
-                        <Text>Remover</Text>
-                    </View>
-                </TouchableOpacity>
-
+                    {/* <TouchableOpacity onPress={this._onPressRemover}>
+                        <View style={styles.button}>
+                            <Text>Remover</Text>
+                        </View>
+                    </TouchableOpacity> */}
+                </View>
+                < ListagemCard navegacao={this.props.cards} montagem={'nao'} />
             </View >
         )
     }
@@ -113,7 +116,11 @@ const styles = StyleSheet.create({
     },
     input: {
         height: 40,
-    }
+    },
+    containerRow: {
+        //flex: 1,
+        flexDirection: 'row',
+    },
 })
 
 Card.propTypes = {

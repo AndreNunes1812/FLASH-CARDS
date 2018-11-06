@@ -24,7 +24,7 @@ class Montagem extends Component {
     render() {
         return (
             <View style={styles.container} >
-                < ListagemCard navegacao={this.props} />
+                < ListagemCard navegacao={this.props} montagem={'sim'} />
                 < Footer navegacao={this.props} />
             </View>
         )

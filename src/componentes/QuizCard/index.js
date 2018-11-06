@@ -79,8 +79,6 @@ class QuizCard extends Component {
         }
         
         this.quantidade= this.quantidade + 1
-        
-      
     }
 
     _chamarPegunta() {
