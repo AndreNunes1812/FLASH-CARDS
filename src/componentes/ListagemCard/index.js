@@ -1,16 +1,15 @@
-import React, { PureComponent } from 'react'
+import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { reduxForm } from 'redux-form'
 import { bindActionCreators } from "redux"
 import { connect } from 'react-redux'
-import { View, StyleSheet, Text, Alert, FlatList, TouchableWithoutFeedback } from 'react-native'
-import { funcSetCards } from '../../actions/cards'
+import { View, StyleSheet, Fragment,Text, Alert, ScrollView,FlatList, TouchableWithoutFeedback } from 'react-native'
 import { getCards, remover } from '../Storage'
 import { Card, Button } from 'react-native-elements';
 
-class ListagemCard extends PureComponent {
+class ListagemCard extends Component {
 
-    cards = []
+   // cards = []
     quantidade = 0
 
     constructor(props) {
@@ -18,30 +17,40 @@ class ListagemCard extends PureComponent {
     }
 
     state = {
-        cards: []
+        cartao: [],        
     }
 
     componentDidMount() {
         getCards().then((retorno) => {
-            this.setState({ cards: retorno }, () => {
+            this.setState({ cartao: retorno }, () => {
                 console.log('RETORNO:', retorno)
-                this.props.funcSetCards(retorno)
+                
+                console.log('RETORNO TAMANHO:', retorno.length)
+                
+              //  this.props.funcSetCards(retorno)
             })
         });
+
     }
+
+    // componentDidUpdate(){
+    //     console.log('componentDidUpdate')
+    //     this._atualizarCards();
+    // }
 
     async _remover(rmCard) {
         console.log('Remover:', rmCard)
         data = await remover(rmCard).then(() => {
-            this._atualizarCards()
-        })          
+             this._atualizarCards()
+        })
         Alert.alert('Card removido com sucesso!');
     }
 
-    async _atualizarCards() {
+    _atualizarCards() {
         console.log('_atualizarCards')
-        data = await  getCards().then((data) =>{
-            this.props.funcSetCards(data)
+        data = getCards().then((data) => {
+            // this.props.funcSetCards(data)
+            this.setState({cards: data})
         })
     }
 
@@ -54,94 +63,36 @@ class ListagemCard extends PureComponent {
     };
 
     render() {
-        // console.log('STATE :', this.state.cards)
-        console.log('cardsReducer :', this.props.cardsReducer[0])
-
-        console.log('cardsReducer Length :', this.props.cardsReducer.length)
+        console.log('STATE :', this.state.cartao)
+        //console.log('cardsReducer :', this.props.cardsReducer[0])
+        //console.log('cardsReducer Length :', this.props.cardsReducer.length)
 
 
 
         cardsNew = []
-         //if (this.props.cardsReducer[0] !== undefined) {
-           if (  this.props.cardsReducer.length !== 0 ) {
-            const { cards } = this.props.cardsReducer[0]
-            console.log('cardsNew :', cards)  
-            cardsNew = cards
+
+          console.log('STATE Length:', this.state.cartao.length)
+        if (this.state.cartao.length !== 0) {
+            cardsNew = this.state.cartao
         }
 
         return (
-
-            <FlatList
-                data={cardsNew}
-                keyExtractor={(item) => Object.keys(item)[0]  }
-                renderItem={({ item }) => {
-                    console.log('Item Listage:')
-                    console.log('Item Listage:', item)
-                    console.log(' Object.keys(item)[0]:', Object.keys(item)[0])
-                    const key = Object.keys(item)[0];
-                    let itemDetail = item[key];
-
-                    /// 
-                    const keySub = Object.values(item);
-                    console.log('key:', keySub)
-                    console.log('key 2:', keySub[0])
-
-                    console.log('key title:', keySub[0].title)
-                    console.log('key question:', keySub[0].questions.length)
-
-                    return (
-
-                        <View>
-                            <TouchableWithoutFeedback onPress={() => {
-                                this.props.montagem === 'sim' ?
-                                    (
-                                        this.props.navegacao.navigation.navigate('CardNumber',
-                                            {
-                                                quantidade: keySub[0].questions.length,
-                                                titulo: itemDetail.title,
-                                                item: itemDetail,
-                                                questions: itemDetail.questions
-                                            })
-                                    ) : (null)
-                            }}>
-
-                                <View>
-                                    <Card>
-                                        <Text style={styles.texto}>
-                                            {itemDetail.title}
-                                        </Text>
-                                        <View style={styles.containerRow}>
-                                            {this.props.montagem === 'nao' ? (
-                                                <Button
-                                                    onPress={() => this._editar}
-                                                    title="Editar"
-                                                    color="#2196F3"                                                    
-
-                                                    backgroundColor="#ffffff"
-                                                />) : (null)}
-                                            {this.props.montagem === 'sim' ? (
-
-                                                <Text style={styles.textoLength}>
-                                                    ({keySub[0].questions.length})
-                                                </Text>
-
-                                            ) : ( null )}
-
-                                            {this.props.montagem === 'nao' ? (
-                                                <Button
-                                                    onPress={() => this._remover(itemDetail.title)}
-                                                    title="Remover"
-                                                    color="#2196F3"
-                                                    backgroundColor="#ffffff"
-                                                />) : (null)}
-                                        </View>
-                                    </Card>
-                                </View>
-                            </TouchableWithoutFeedback>
+            console.log('return', this.state.cartao),
+            <View style={styles.container}>
+            <ScrollView>
+              
+                    {this.state.cartao.map((c , index ) => (
+                        console.log('C', c),
+                        <View key = {c.name}>
+                            <Text>
+                                {c.title}
+                            </Text>
+                       
                         </View>
-                    )
-                }}
-            />
+                    ))}
+ 
+            </ScrollView>
+            </View>
         );
     }
 
@@ -164,9 +115,9 @@ const styles = StyleSheet.create({
         //  height: 480,
     },
     texto: {
-        color: '#2196F3',
+        color: 'blue',
         fontSize: 20,
-        paddingTop: 20,
+        paddingTop: 40,
         textAlign: 'center',
         fontWeight: 'bold',
     },
@@ -185,31 +136,33 @@ const styles = StyleSheet.create({
     }
 });
 
-ListagemCard.propTypes = {
-    funcSetCards: PropTypes.func.isRequired,
-}
+// ListagemCard.propTypes = {
+//     funcSetCards: PropTypes.func.isRequired,
+// }
 
 
-const mapStateToProps = (state) => {
-    console.log('State Listagem:', state.cards)      
+// const mapStateToProps = (state) => {
+//     console.log('State Listagem:', state.cards)
 
-    return {
-        cardsReducer: state.cards,
-        sendCards: this.cards
-    }
-}
+//     return {
+//         cardsReducer: state.cards,
+//         sendCards: this.cards
+//     }
+// }
 
-const mapDispatchToProps = (dispatch) => {
-    return (bindActionCreators({
-        funcSetCards: (sendCards) => funcSetCards(sendCards),
-    }, dispatch))
-}
+// const mapDispatchToProps = (dispatch) => {
+//     return (bindActionCreators({
+//         funcSetCards: (sendCards) => funcSetCards(sendCards),
+//     }, dispatch))
+// }
 
-export default connect(
-    mapStateToProps, mapDispatchToProps
-)(reduxForm({
-    form: 'listagemCard',
-    enableReinitialize: true,
-    //   validate,
-    //   warn
-})(ListagemCard));
+export default ListagemCard
+
+// export default connect(
+//     mapStateToProps, mapDispatchToProps
+// )(reduxForm({
+//     form: 'listagemCard',
+//     enableReinitialize: true,
+//     //   validate,
+//     //   warn
+// })(ListagemCard));

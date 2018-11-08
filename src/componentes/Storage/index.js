@@ -51,26 +51,49 @@ export async function saveKey(value, card) {
     }
 }
 
+// export  function getCards() {
+
+//     const arrayAndre = []
+//     AsyncStorage.getAllKeys().then((storage)=> {
+//         storage.forEach( k => {
+//             const value = AsyncStorage.getItem(k).then((value)=> {
+//                 console.log(k);
+//                 console.log(value);
+//                //////////// arrayAndre.push( JSON.parse(value))
+//                arrayAndre.push( {name: k, title: k , questions: [value]})
+//                 //andreMap.set(k,value)
+//                 // console.log('sss', JSON.parse(value));
+                  
+//             });
+//              console.log('arrayAndre ', arrayAndre)
+//             return arrayAndre
+//         });
+//     })
+
+//      console.log('arrayAndre saida ', arrayAndre)
+//     return arrayAndre //storage
+// }
+
 export async function getCards() {
 
     const arrayAndre = []
-    const andreMap = new Map()
     await AsyncStorage.getAllKeys().then((storage)=> {
         storage.forEach(async k => {
             const value = await AsyncStorage.getItem(k).then((value)=> {
                 // console.log(k);
                 // console.log(value);
-                arrayAndre.push( JSON.parse(value))
+               //////////// arrayAndre.push( JSON.parse(value))
+               arrayAndre.push( {'name': k, 'title': k , 'questions': [value]})
                 //andreMap.set(k,value)
                 // console.log('sss', JSON.parse(value));
                   
             });
-           
-            return andreMap
+             console.log('arrayAndre ', arrayAndre)
+            return arrayAndre
         });
     })
 
-    // console.log('arrayAndre saida ', arrayAndre)
+     console.log('arrayAndre saida ', arrayAndre)
     return arrayAndre //storage
 }
 

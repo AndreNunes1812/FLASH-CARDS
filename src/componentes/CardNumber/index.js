@@ -52,14 +52,6 @@ class CardNumber extends PureComponent {
             <View >
                 <Card title={this.titulo}>
                     <View >
-                        {/* <TextInput
-                            placeholder="informe quantidade de pergunta(s)"
-                            style={styles.input}
-                            keyboardType='numeric'
-                            onChangeText={(text) => this.onChanged(text)}
-                            // value={self.state.myNumber}
-                            maxLength={10}
-                        /> */}
 
                         <ButtonGroup
                             selectedBackgroundColor="blue"
