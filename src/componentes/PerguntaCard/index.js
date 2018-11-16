@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { reduxForm } from 'redux-form'
 import { bindActionCreators } from "redux"
 import { connect } from 'react-redux'
-import { setCard, remover, getCards, saveKey, getKey } from '../Storage'
+import { addCardToDeck, remover, getCards, saveKey, getKey } from '../Storage'
 import { funcSetCards } from '../../actions/cards'
 import { Card, ButtonGroup } from 'react-native-elements'
 
@@ -46,36 +46,46 @@ class PerguntaCard extends Component {
 
             console.log('Data JSON:', JSON.parse( value))
             
-            const key = Object.values(JSON.parse( value));
-            console.log('key:', key)
-            console.log('key 2:', key[0])
-
-            console.log('key title:', key[0].title)
-            console.log('key question:', key[0].questions)
-
+            if (JSON.parse( value) !== null) {
+                const key = Object.values(JSON.parse( value));
+                console.log('key:', key)
+                console.log('key 2:', key[0])
+    
+                console.log('key title:', key[0].title)
+                console.log('key question:', key[0].questions)
+            }
+            
         })
 
     }
 
     _salvarPergunta(pergunta , resposta) {
         console.log('this.titulo:', this.titulo)
+
+        addCardToDeck(this.titulo , {
+            question: pergunta,
+            answer: resposta,
+        }).then(()=>{
+
+            console.log('Apos salvar valores',this.state.qtdSalva, this.questions.length)
+            this._atualizarCards()
+            Alert.alert('Card salvo com sucesso!');
+
+        })
         
-        this.questions.push({ 'question': pergunta, 'answer': resposta })
+     //   this.questions.push({ 'question': pergunta, 'answer': resposta })
              
-        let card = this.titulo
-        saveKey({ [card]: { title: card, 'questions':  this.questions } }, card)
-        console.log('Apos salvar valores',this.state.qtdSalva, this.questions.length)
-        this._atualizarCards()
-        Alert.alert('Card salvo com sucesso!');
+     //   let card = this.titulo
+      //  saveKey({ [card]: { title: card, 'questions':  this.questions } }, card)
+
         
     }
 
-    async _atualizarCards() {
-        console.log('_atualizarCards')
-        data = await  getCards().then((data) =>{
+    _atualizarCards() {
+        console.log('_atualizarCards Pergunta')
+        getCards().then((data) => {
             this.props.funcSetCards(data)
-        }).then(()=>{
-            this._chamarPegunta()
+            console.log('data:', data)
         })
     }
 

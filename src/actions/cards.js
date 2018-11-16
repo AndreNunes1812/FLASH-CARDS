@@ -3,7 +3,7 @@ export const ADD_CARD = 'ADD_CARD'
 export const REMOVE_CARD = 'REMOVE_CARD'
 
 export function setCards(cards) {
-    // console.log('DISPATCH SETCARDS:', cards )
+    console.log('DISPATCH SETCARDS:', cards )
     return {
         type: SET_CARDS,
         cards: cards

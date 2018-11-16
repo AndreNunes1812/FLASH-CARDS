@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { reduxForm } from 'redux-form'
 import { bindActionCreators } from "redux"
 import { connect } from 'react-redux'
-import { setCard, remover, getCards, saveKey, getKey } from '../Storage'
+import { saveDeckTitle, remover, getCards, saveKey, getKey } from '../Storage'
 import { funcSetCards } from '../../actions/cards'
 import ListagemCard from '../ListagemCard/index'
 
@@ -32,29 +32,41 @@ class Card extends Component {
         this._removerCard = this._removerCard.bind(this)
     }
 
-    _onPress = () => {
-        let card = this.state.card
-        saveKey({ [card]: { title: card, 'questions': [] } }, card)
-        console.log('Apos salvar valores')
-        this._atualizarCards()
-        Alert.alert('Card salvo com sucesso!,');
+    _onPress = () => {  
+        console.log('cards state:')     
+                
+        if(this.state.card === null) {
+            Alert.alert('Informar o nome do Baralho.')
+        } else {
+            let card = this.state.card
+            saveDeckTitle(card)
+            .then(()=>{
+                this._atualizarCards()
+                Alert.alert('Baralho salvo com sucesso!');
+            })
+        }
     }
 
-    async _atualizarCards() {
-        console.log('_atualizarCards')
-        data = await  getCards().then((data) =>{
+    _atualizarCards() {
+        console.log('em CARD')
+        getCards().then((data) => {
             this.props.funcSetCards(data)
+            console.log('data:', data)
         })
     }
 
-    _onPressLer = () => {
-        let card = this.state.card
-        getKey(card)
-        Alert.alert('Card _onPressLer!');
-    }
+    // _onPressLer = () => {
+    //     let card = this.state.card
+    //     getKey(card)
+    //     Alert.alert('Card _onPressLer!');
+    // }
 
     _onPressRemover = () => {        
         this._removerCard(this.state.card)        
+    }
+
+    _editar = () => {
+        console.log('EDICAO CARDS:')
     }
 
     async _removerCard(rmCard) {
@@ -72,7 +84,7 @@ class Card extends Component {
                 <TextInput style={styles.input}
                     placeholder="Inserir CARD"
                     name="card"
-                    // value={this.state.card}
+                    //value={this.state.card}
                     onChangeText={(e) => {
                         this.setState({ card: e })
                     }}
@@ -80,22 +92,9 @@ class Card extends Component {
                 <View style={styles.containerRow}  >
                     <TouchableOpacity onPress={this._onPress}>
                         <View style={styles.button}>
-                            <Text>Salvar</Text>
+                            <Text>Criar</Text>
                         </View>
                     </TouchableOpacity>
-
-
-                    {/* <TouchableOpacity onPress={this._onPressLer}>
-                        <View style={styles.button}>
-                            <Text>Ler</Text>
-                        </View>
-                    </TouchableOpacity> */}
-
-                    {/* <TouchableOpacity onPress={this._onPressRemover}>
-                        <View style={styles.button}>
-                            <Text>Remover</Text>
-                        </View>
-                    </TouchableOpacity> */}
                 </View>
                 < ListagemCard navegacao={this.props.cards} montagem={'nao'} />
             </View >
@@ -139,7 +138,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
     return (bindActionCreators({
         // funcAddCard: (cards) => funcAddCard(cards),
-        funcSetCards: (cardsUpdate) => funcSetCards(cardsUpdate)
+        funcSetCards: (cards) => funcSetCards(cards)
     }, dispatch))
 }
 

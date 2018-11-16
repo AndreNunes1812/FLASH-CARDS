@@ -30,7 +30,7 @@ export function setCard(card) {
 }
 
 export async function getKey(item) {
-    // console.log("getKey dentro:", item);
+    console.log("getKey dentro:", item);
     try {
         const value = await AsyncStorage.getItem(item)
         console.log("value:" + value);
@@ -40,6 +40,39 @@ export async function getKey(item) {
         console.log("Error retrieving data" + error);
     }
 }
+
+export function saveDeckTitle (title) {
+    return AsyncStorage.getItem(CARD_STORAGE_KEY)
+        .then(results => JSON.parse(results) || {})
+        .then(decks => {
+            decks[title] = {
+                'title': title,
+                questions: []
+            }
+            AsyncStorage.setItem(CARD_STORAGE_KEY, JSON.stringify(decks))
+            return title
+        })
+}
+
+export function getDeck (id) {
+    return AsyncStorage.getItem(CARD_STORAGE_KEY)
+        .then(results => JSON.parse(results) || {})
+        .then(decks => decks[id] || {})
+}
+
+export function addCardToDeck (title, card) {
+    console.log('addCardToDeck:',title, card)
+    return AsyncStorage.getItem(CARD_STORAGE_KEY)
+        .then(results => JSON.parse(results) || {})
+        .then(decks => {
+            if (decks[title]) {
+                decks[title].questions.push(card)
+                AsyncStorage.setItem(CARD_STORAGE_KEY, JSON.stringify(decks))
+                return title
+            }
+        })
+}
+
 
 export async function saveKey(value, card) {
     // console.log('Save:', value, card)
@@ -51,60 +84,51 @@ export async function saveKey(value, card) {
     }
 }
 
-// export  function getCards() {
+export function getCards() {
 
-//     const arrayAndre = []
-//     AsyncStorage.getAllKeys().then((storage)=> {
-//         storage.forEach( k => {
-//             const value = AsyncStorage.getItem(k).then((value)=> {
-//                 console.log(k);
-//                 console.log(value);
-//                //////////// arrayAndre.push( JSON.parse(value))
-//                arrayAndre.push( {name: k, title: k , questions: [value]})
-//                 //andreMap.set(k,value)
-//                 // console.log('sss', JSON.parse(value));
+    return AsyncStorage.getItem(CARD_STORAGE_KEY)
+        .then(results => JSON.parse(results) || {})
+  
+    
+    // const arrayAndre = []
+    // await AsyncStorage.getAllKeys().then((storage)=> {
+
+    //     console.log('storage ', storage)
+    //     storage.forEach(async k => {
+    //         const value = await AsyncStorage.getItem(k).then((value)=> {
+    //             // console.log(k);
+    //             // console.log(value);
+    //            //////////// arrayAndre.push( JSON.parse(value))
+    //            arrayAndre.push( {'name': k, 'title': k , 'questions': [value]} )
+    //             //andreMap.set(k,value)
+    //             // console.log('sss', JSON.parse(value));
                   
-//             });
-//              console.log('arrayAndre ', arrayAndre)
-//             return arrayAndre
-//         });
-//     })
+    //         });
+    //          console.log('arrayAndre ', arrayAndre)
+    //         return arrayAndre
+    //     });
+    // })
 
-//      console.log('arrayAndre saida ', arrayAndre)
-//     return arrayAndre //storage
-// }
-
-export async function getCards() {
-
-    const arrayAndre = []
-    await AsyncStorage.getAllKeys().then((storage)=> {
-        storage.forEach(async k => {
-            const value = await AsyncStorage.getItem(k).then((value)=> {
-                // console.log(k);
-                // console.log(value);
-               //////////// arrayAndre.push( JSON.parse(value))
-               arrayAndre.push( {'name': k, 'title': k , 'questions': [value]})
-                //andreMap.set(k,value)
-                // console.log('sss', JSON.parse(value));
-                  
-            });
-             console.log('arrayAndre ', arrayAndre)
-            return arrayAndre
-        });
-    })
-
-     console.log('arrayAndre saida ', arrayAndre)
-    return arrayAndre //storage
+    //  console.log('arrayAndre saida ', arrayAndre)
+    // return arrayAndre //storage
 }
 
+// export async function remover(key) {
+
+//     try {
+//       return await AsyncStorage.removeItem(key);
+//     }
+//     catch (exception) {
+//         return false;
+//     }
+
+// }
 
 export async function remover(key) {
-
-    try {
-      return await AsyncStorage.removeItem(key);
-    }
-    catch (exception) {
-        return false;
-    }
-
+return AsyncStorage.getItem(CARD_STORAGE_KEY)
+    .then((results) => {
+        const data = JSON.parse(results)
+        data[key] = undefined
+        AsyncStorage.setItem(CARD_STORAGE_KEY, JSON.stringify(data))
+    })
 }

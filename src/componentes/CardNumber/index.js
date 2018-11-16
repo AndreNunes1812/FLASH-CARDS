@@ -1,14 +1,12 @@
-import React, { PureComponent } from 'react'
-import PropTypes from 'prop-types'
+import React, { Component } from 'react'
 import { Card, ButtonGroup } from 'react-native-elements'
 import {
     View,
-    TextInput,
     StyleSheet,
     Alert
 } from 'react-native'
 
-class CardNumber extends PureComponent {
+class CardNumber extends Component {
 
     cards = []
     titulo = ''
@@ -29,12 +27,10 @@ class CardNumber extends PureComponent {
 
     updateIndex = (index) => {
         this.setState({ index })
-        console.log('index:', index)
         this._chamadaNavegacao(index)
     }
 
     onChanged(text) {
-        console.log('TEXTO:', text)
         this.quantidade = text
     }
 
@@ -48,6 +44,8 @@ class CardNumber extends PureComponent {
 
         console.log('item: ', this.item)
 
+        console.log('Navigation ', navigation)
+        
         return (
             <View >
                 <Card title={this.titulo}>

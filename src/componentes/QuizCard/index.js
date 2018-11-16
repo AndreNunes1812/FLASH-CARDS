@@ -3,20 +3,16 @@ import PropTypes from 'prop-types'
 import { reduxForm } from 'redux-form'
 import { bindActionCreators } from "redux"
 import { connect } from 'react-redux'
-import { setCard, remover, getCards, saveKey, getKey } from '../Storage'
+import { getDeck } from '../Storage'
 import { funcSetCards } from '../../actions/cards'
 import { Card, Button, ButtonGroup } from 'react-native-elements'
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-
 import {
     View,
-    TextInput,
     StyleSheet,
     Text,
     Alert,
-    Label
-
 } from 'react-native'
 
 class QuizCard extends Component {
@@ -46,10 +42,17 @@ class QuizCard extends Component {
         console.log('Fui chamado:')
         this.questions = this.props.navigation.getParam('questions', 'Objeto não encontrado')
         console.log('Item questions:', this.questions)
-        console.log('Item question:', this.questions[0])       
+        console.log('Item question length:', this.questions.length)  
+        
+        if (this.questions.length === 0 ) {
+            Alert.alert('Favor gerar as perguntas.')
+        } else {
 
-        this._chamarPegunta()
+            this._chamarPegunta()
 
+        }
+
+        
     }
     _pergunta() {
         this.setState({ cardResposta: false, cardPergunta: true })
@@ -60,63 +63,44 @@ class QuizCard extends Component {
     }
 
     _capturarPerguntaResposta(capturar) {
-
-        console.log('capturar question:', capturar.question, capturar.answer)
-        //this.pergunta = capturar.question
-        //this.resposta = capturar.answer
         this.setState({pergunta: capturar.question, resposta: capturar.answer })  
     }
 
     _respostaQuiz( resposta) {
-        console.log('resposta:', resposta)
-
-
         if (this.quantidade === this.state.numQuestao ) {
-            console.log('FINALIZOU')
-        } else {
-            console.log('this.questions:', this.questions[this.quantidade])
+            console.log('FINALIZOU', this.props)
+            this.props.navigation.push('FinalizarQuiz',{
+                navegacao: this.state
+            })
+        } else {           
             this._capturarPerguntaResposta(this.questions[this.quantidade])
-        }
-        
+        }    
+         
+     
         this.quantidade= this.quantidade + 1
     }
 
     _chamarPegunta() {
-        getKey(this.titulo).then((value) => {
-            console.log('Data:', value)
 
-            console.log('Data JSON:', JSON.parse(value))
-
-            const key = Object.values(JSON.parse(value));
-            console.log('key:', key)
-            console.log('key 2:', key[0])
-
-            console.log('key title:', key[0].title)
-            console.log('key question:', key[0].questions.length)
-            this.setState({ numQuestao: key[0].questions.length })
-            this._capturarPerguntaResposta(this.questions[0])
-
+        getDeck(this.titulo)
+        .then((deck) => {
+            this.setState({ numQuestao: deck.questions.length }, ()=>{
+                this._capturarPerguntaResposta(this.questions[0])
+            })            
         })
-
     }
 
-     render() {
-
+    render() {
         const { navigation, cards } = this.props;
-        // this.quantidade = navigation.getParam('quantidade', 'NO-ID')
-        this.titulo = navigation.getParam('titulo', 'card não disponivel')
+        this.titulo = navigation.getParam('titulo', 'Baralho não disponivel')
         this.item = navigation.getParam('item', 'Objeto não encontrado')
         this.cards = cards
 
-        console.log('Item:', this.item)
-        console.log('State:', this.state)
-        
-      
         return (
             <View>
                 <View >
-
-                    {this.state.cardPergunta ? (
+                  
+                    {this.state.cardPergunta && this.state.numQuestao > 0 ? (
                         <Card title={this.titulo}>
                             <View >
                                 <Text style={styles.titleText} >
@@ -140,28 +124,24 @@ class QuizCard extends Component {
                                     backgroundColor="#ffffff"
                                 />
 
-
                                 <View style={styles.containerRow} >
                                     <Button
                                         style={styles.texto}
                                         onPress={() => this._respostaQuiz('sim')}
                                         title="Sim"
                                         color="#841584"
-                                    ///backgroundColor="blue"
                                     />
                                     <Button
                                         style={styles.texto}
                                         onPress={() => this._respostaQuiz('nao')}
                                         title="Não"
                                         color="#841584"
-                                    ///backgroundColor="yellow"
-                                    />
+                                     />
                                 </View>
-
                             </View>
                         </Card>
-                    ) : (null)}
-                    {this.state.cardResposta ? (
+                    ) : (<Text style={styles.titleText}> Não a QUIZ disponível</Text>)}
+                    {this.state.cardResposta && this.state.numQuestao > 0 ? (
                         <Card title={this.titulo}
                             backgroundColor="#1919e6">
                             <View >
@@ -169,14 +149,12 @@ class QuizCard extends Component {
                                 <Text style={styles.titleText} >
                                     {this.state.resposta}   {'\n'}{'\n'}
                                 </Text>
-
                                 <Button
                                     onPress={() => this._pergunta()}
                                     title="pergunta"
                                     color="#841584"
                                     backgroundColor="#ffffff"
                                 />
-
                                 <ButtonGroup
                                     disableSelected={this.state.disableSalvarResp}
                                     selectedBackgroundColor="#1919e6"
@@ -186,16 +164,13 @@ class QuizCard extends Component {
                                     containerStyle={{ height: 30 }} />
                             </View>
                         </Card>
-
                     ) : (null)}
                 </View>
-
             </View>
         )
     }
 
 }
-
 
 const styles = StyleSheet.create({
     container: {
@@ -211,17 +186,13 @@ const styles = StyleSheet.create({
     },
     perguntaText:{
         width: 150,
-        // alignItems: 'center',
         fontSize:30,
-
         fontWeight: 'bold',
-
     },
 
     texto: {
         backgroundColor: '#2196F3',
         width: 150,
-        // alignItems: 'center',
         textAlign: 'center',
         fontWeight: 'bold',
     },
@@ -239,11 +210,9 @@ const styles = StyleSheet.create({
 
 QuizCard.propTypes = {
     funcSetCards: PropTypes.func.isRequired,
-
 }
 
 const mapStateToProps = (state) => {
-    console.log('State Quiz:', state)
     return {
         cards: state.cards,
         cardsUpdate: this.cards
@@ -252,11 +221,9 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return (bindActionCreators({
-        // funcAddCard: (cards) => funcAddCard(cards),
         funcSetCards: (cardsUpdate) => funcSetCards(cardsUpdate)
     }, dispatch))
 }
-
 
 export default connect(
     mapStateToProps, mapDispatchToProps

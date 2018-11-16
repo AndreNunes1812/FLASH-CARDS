@@ -7,10 +7,9 @@ import Card from '../Card/index'
 import CardNumber from '../CardNumber/index'
 import PerguntaCard from '../PerguntaCard/index'
 import QuizCard from '../QuizCard/index'
-
+import FinalizarQuiz from '../QuizCard/FinalizarQuiz'
 
 import { createStackNavigator } from 'react-navigation'
-
 
 class Montagem extends Component {
 
@@ -21,6 +20,7 @@ class Montagem extends Component {
     static navigationOptions = ({ navigation }) => ({
 
     });
+
     render() {
         return (
             <View style={styles.container} >
@@ -87,6 +87,12 @@ const MontagemApp = createStackNavigator({
             headerStyle: {
                 backgroundColor: '#2196F3',
             }
+        })
+    },
+    FinalizarQuiz: {
+        screen: FinalizarQuiz,
+        navigationOptions: ({ navigation }) => ({
+            header: null,
         })
     },
 

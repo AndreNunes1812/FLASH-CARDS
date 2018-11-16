@@ -3,59 +3,49 @@ import PropTypes from 'prop-types'
 import { reduxForm } from 'redux-form'
 import { bindActionCreators } from "redux"
 import { connect } from 'react-redux'
-import { View, StyleSheet, Fragment,Text, Alert, ScrollView,FlatList, TouchableWithoutFeedback } from 'react-native'
+import { View, 
+    StyleSheet, 
+    Text, 
+    Alert, 
+    FlatList, 
+    TouchableWithoutFeedback 
+} from 'react-native'
 import { getCards, remover } from '../Storage'
 import { Card, Button } from 'react-native-elements';
+import { funcSetCards } from '../../actions/cards'
 
 class ListagemCard extends Component {
 
-   // cards = []
     quantidade = 0
+    newDecks = null;
 
     constructor(props) {
         super(props)
     }
 
-    state = {
-        cartao: [],        
-    }
-
     componentDidMount() {
-        getCards().then((retorno) => {
-            this.setState({ cartao: retorno }, () => {
-                console.log('RETORNO:', retorno)
-                
-                console.log('RETORNO TAMANHO:', retorno.length)
-                
-              //  this.props.funcSetCards(retorno)
-            })
-        });
-
+        this._atualizarCards()
     }
 
-    // componentDidUpdate(){
-    //     console.log('componentDidUpdate')
-    //     this._atualizarCards();
-    // }
-
-    async _remover(rmCard) {
+    _remover(rmCard) {
         console.log('Remover:', rmCard)
-        data = await remover(rmCard).then(() => {
-             this._atualizarCards()
+        remover(rmCard).then(() => {
+            this._atualizarCards()
         })
         Alert.alert('Card removido com sucesso!');
     }
 
     _atualizarCards() {
         console.log('_atualizarCards')
-        data = getCards().then((data) => {
-            // this.props.funcSetCards(data)
-            this.setState({cards: data})
+        getCards().then((data) => {
+            this.props.funcSetCards(data)
+            console.log('data:', data)
         })
     }
 
-    _editar = () => {
-
+    _editar(title) {
+        console.log('EDICAO:', title)
+        this.setState({})
     }
 
     _keyExtractor = (item) => {
@@ -63,35 +53,70 @@ class ListagemCard extends Component {
     };
 
     render() {
-        console.log('STATE :', this.state.cartao)
-        //console.log('cardsReducer :', this.props.cardsReducer[0])
-        //console.log('cardsReducer Length :', this.props.cardsReducer.length)
 
-
-
-        cardsNew = []
-
-          console.log('STATE Length:', this.state.cartao.length)
-        if (this.state.cartao.length !== 0) {
-            cardsNew = this.state.cartao
+        if (this.props.cardsReducer[0] != undefined) {
+            const key = Object.values(this.props.cardsReducer[0]);
+            this.newDecks = key[0]
         }
 
         return (
-            console.log('return', this.state.cartao),
             <View style={styles.container}>
-            <ScrollView>
-              
-                    {this.state.cartao.map((c , index ) => (
-                        console.log('C', c),
-                        <View key = {c.name}>
-                            <Text>
-                                {c.title}
-                            </Text>
-                       
-                        </View>
-                    ))}
- 
-            </ScrollView>
+                {this.newDecks != null ? (
+                    <FlatList
+                        data={Object.keys(this.newDecks).map((id) => this.newDecks[id])}
+                        keyExtractor={(item, index) => index.toString()}
+                        renderItem={({ item }) => (
+
+                            <View>
+                                <TouchableWithoutFeedback onPress={() => {
+                                    this.props.montagem === 'sim' ?
+                                        (
+                                            this.props.navegacao.navigation.navigate('CardNumber',
+                                                {
+                                                    quantidade: item.questions,
+                                                    titulo: item.title,
+                                                    item: item,
+                                                    questions: item.questions
+                                                })
+                                        ) : (null)
+                                }}>
+
+                                    <View>
+                                        <Card>
+                                            <Text style={styles.texto}>
+                                                {item.title}
+                                            </Text>
+                                            <View style={styles.containerRow}>
+                                                {this.props.montagem === 'sim' ? (
+
+                                                    <Text style={styles.textoLength}>
+                                                        ({item.questions.length})
+                                                    </Text>
+
+                                                ) : (null)}
+
+                                                {this.props.montagem === 'nao' ? (
+                                                        <Button  
+                                                            onPress={() => this._remover(item.title)}
+                                                            title="Remover"
+                                                            color="#2196F3"
+                                                            backgroundColor="#ffffff"
+                                                        />
+                                                 
+                                                    ) : (null)}
+                                            </View>
+                                        </Card>
+                                    </View>
+                                </TouchableWithoutFeedback>
+                            </View>
+
+                        )
+                        }
+                    />
+
+
+                ) : (null)}
+
             </View>
         );
     }
@@ -105,25 +130,24 @@ class ListagemCard extends Component {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        flexDirection: 'column',
+        flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
 
     },
-    box2: {
-        backgroundColor: 'blue',
-        //  height: 480,
-    },
     texto: {
-        color: 'blue',
+        color: '#2196F3',
         fontSize: 20,
-        paddingTop: 40,
+        paddingTop: 20,
         textAlign: 'center',
         fontWeight: 'bold',
     },
     containerRow: {
-        //flex: 1,
+        flex: 1,
         flexDirection: 'row',
+    },
+    button: {
+        textAlign: 'center',
     },
     textoLength: {
         color: 'black',
@@ -136,33 +160,33 @@ const styles = StyleSheet.create({
     }
 });
 
-// ListagemCard.propTypes = {
-//     funcSetCards: PropTypes.func.isRequired,
-// }
+ListagemCard.propTypes = {
+    funcSetCards: PropTypes.func.isRequired,
+}
 
 
-// const mapStateToProps = (state) => {
-//     console.log('State Listagem:', state.cards)
+const mapStateToProps = (state) => {
+    console.log('State Listagem:', state.cards)
 
-//     return {
-//         cardsReducer: state.cards,
-//         sendCards: this.cards
-//     }
-// }
+    return {
+        cardsReducer: state.cards,
+        sendCards: this.cards
+    }
+}
 
-// const mapDispatchToProps = (dispatch) => {
-//     return (bindActionCreators({
-//         funcSetCards: (sendCards) => funcSetCards(sendCards),
-//     }, dispatch))
-// }
+const mapDispatchToProps = (dispatch) => {
+    return (bindActionCreators({
+        funcSetCards: (sendCards) => funcSetCards(sendCards),
+    }, dispatch))
+}
 
-export default ListagemCard
+//export default ListagemCard
 
-// export default connect(
-//     mapStateToProps, mapDispatchToProps
-// )(reduxForm({
-//     form: 'listagemCard',
-//     enableReinitialize: true,
-//     //   validate,
-//     //   warn
-// })(ListagemCard));
+export default connect(
+    mapStateToProps, mapDispatchToProps
+)(reduxForm({
+    form: 'listagemCard',
+    enableReinitialize: true,
+    //   validate,
+    //   warn
+})(ListagemCard));
