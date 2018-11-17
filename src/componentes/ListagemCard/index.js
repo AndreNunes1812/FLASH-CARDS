@@ -3,16 +3,23 @@ import PropTypes from 'prop-types'
 import { reduxForm } from 'redux-form'
 import { bindActionCreators } from "redux"
 import { connect } from 'react-redux'
-import { View, 
+import { Card, Button } from 'react-native-elements';
+import { funcSetCards } from '../../actions/cards'
+import { 
+    View, 
     StyleSheet, 
     Text, 
     Alert, 
     FlatList, 
     TouchableWithoutFeedback 
 } from 'react-native'
-import { getCards, remover } from '../Storage'
-import { Card, Button } from 'react-native-elements';
-import { funcSetCards } from '../../actions/cards'
+import { 
+    getCards, 
+    remover,
+    containsLocalNotification, 
+    setLocalNotification 
+} from '../Storage'
+
 
 class ListagemCard extends Component {
 
@@ -24,6 +31,7 @@ class ListagemCard extends Component {
     }
 
     componentDidMount() {
+       
         this._atualizarCards()
     }
 
@@ -38,6 +46,12 @@ class ListagemCard extends Component {
     _atualizarCards() {
         console.log('_atualizarCards')
         getCards().then((data) => {
+
+             console.log('!containsLocalNotification()', !containsLocalNotification())
+
+            if (!containsLocalNotification()){
+                setLocalNotification()
+           }
             this.props.funcSetCards(data)
             console.log('data:', data)
         })
@@ -90,7 +104,7 @@ class ListagemCard extends Component {
                                                 {this.props.montagem === 'sim' ? (
 
                                                     <Text style={styles.textoLength}>
-                                                        ({item.questions.length})
+                                                        {item.questions.length} cards
                                                     </Text>
 
                                                 ) : (null)}

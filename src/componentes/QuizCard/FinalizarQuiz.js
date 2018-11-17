@@ -1,17 +1,20 @@
 import React, { Component } from 'react'
+import { NavigationActions } from 'react-navigation'
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { clearLocalNotification, setLocalNotification } from '../Storage'
 
 import {
     View,
     StyleSheet,
     Text,
-    TouchableHighlight,
+    TouchableOpacity
 } from 'react-native'
 
 class FinalizarQuiz extends Component {
 
     componentDidMount() {
-        console.log('FinalizarQuiz componentDidMount:', this.props)
+        clearLocalNotification()
+        .then(setLocalNotification)
     }
 
     render() {
@@ -21,16 +24,17 @@ class FinalizarQuiz extends Component {
                     <Text style={styles.textoObrigado}>Obrigado!</Text>
                 </View>
                 <View><Text style={styles.texto}>Você respondeu {this.props.navigation.state.params.navegacao.numQuestao } questão(oes)</Text></View>
-                <TouchableHighlight
-                    style={styles.submit}
-                    onPress={() => null}
-                    underlayColor='#fff'>
-                    <Text style={styles.submitText} >Iniciar</Text>
-                </TouchableHighlight>
+                <View style={styles.resultBottom}>
+                    <TouchableOpacity style={[styles.button, {backgroundColor: '#fff'}]} onPress={() => {this.props.navigation.navigate('CardNumber')}}>
+                        <Text style={[styles.buttonText, {color: '#000'}]}>Iniciar</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity style={[styles.button, {backgroundColor: '#000'}]}>
+                        <Text style={[styles.buttonText, {color: '#fff'}]} onPress={() => {this.props.navigation.navigate('Montagem')}}>Retornar Baralho(s)</Text>
+                    </TouchableOpacity>
+                </View>
             </View>
         )
     }
-
 }
 
 const styles = StyleSheet.create({
@@ -67,10 +71,34 @@ const styles = StyleSheet.create({
         borderRadius:10,
         borderWidth: 1,
         borderColor: '#fff'
-      },
-      submitText:{
+    },
+    submitText:{
         color:'#fff',
         textAlign:'center',
+    },
+    button: {
+        padding: 20,
+        margin: 10,
+        marginLeft: 60,
+        marginRight: 60,
+        borderRadius: 5,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderWidth: 1,
+    },
+    percentageHolder: {
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#fff',
+        borderWidth: 1,
+    },
+    percentage: {
+        fontSize: 130,
+        color: '#000',
+         textAlign: 'center',
+    },
+    resultBottom: {
+        marginTop: 30,
     }
 })
 

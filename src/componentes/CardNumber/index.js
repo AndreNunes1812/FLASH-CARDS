@@ -1,9 +1,16 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
+import { bindActionCreators } from "redux"
+import { connect } from 'react-redux'
+import { reduxForm } from 'redux-form'
 import { Card, ButtonGroup } from 'react-native-elements'
+import { funcSetCards } from '../../actions/cards'
+import { getCards } from '../Storage'
 import {
     View,
     StyleSheet,
-    Alert
+    Alert,
+    Text
 } from 'react-native'
 
 class CardNumber extends Component {
@@ -23,6 +30,22 @@ class CardNumber extends Component {
         }
         self = this
         this.onChanged = this.onChanged.bind(this)
+    }
+    
+    componentDidMount() {
+        this._atualizarCards()
+    }
+
+    componentWillMount() {
+        console.log('componentWillMount')
+    }
+
+    _atualizarCards() {
+        console.log('_atualizarCards')
+        getCards().then((data) => {
+            this.props.funcSetCards(data)
+            console.log('data:', data)
+        })
     }
 
     updateIndex = (index) => {
@@ -48,9 +71,9 @@ class CardNumber extends Component {
         
         return (
             <View >
-                <Card title={this.titulo}>
+                <Card title={this.titulo} >
                     <View >
-
+                        <Text>Nº de baralhos {this.questions.length}</Text>
                         <ButtonGroup
                             selectedBackgroundColor="blue"
                             onPress={(index) => {
@@ -102,22 +125,30 @@ const styles = StyleSheet.create({
     }
 })
 
-// CardNumber.propTypes = {
-//     funcSetCards: PropTypes.func.isRequired,
+CardNumber.propTypes = {
+    funcSetCards: PropTypes.func.isRequired,
+}
 
-// }
+const mapStateToProps = (state) => {
+    console.log('State Listagem:', state.cards)
 
-// const CardNumberApp = createStackNavigator({
-//     CardNumber: { screen: CardNumber },
-//     PerguntaCard: { screen: PerguntaCard ,
-//         navigationOptions: ({ navigation }) => ({
-//             title: 'ADCIONAR PERGUNTA',
-//             headerTitleStyle: { color: 'white' },
-//             headerStyle: {
-//                 backgroundColor: '#2196F3',
-//             }
-//         }) 
-//      },
-// })
+    return {
+        cardsReducer: state.cards,
+        sendCards: this.cards
+    }
+}
 
-export default CardNumber
+const mapDispatchToProps = (dispatch) => {
+    return (bindActionCreators({
+        funcSetCards: (sendCards) => funcSetCards(sendCards),
+    }, dispatch))
+}
+
+export default connect(
+    mapStateToProps, mapDispatchToProps
+)(reduxForm({
+    form: 'cardNumber',
+    enableReinitialize: true,
+    //   validate,
+    //   warn
+})(CardNumber));

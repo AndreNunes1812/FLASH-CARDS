@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { View, StyleSheet, Alert, TouchableOpacity, Text } from 'react-native'
+import { View, StyleSheet, AsyncStorage } from 'react-native'
 
 import ListagemCard from '../ListagemCard/index'
 import Footer from '../Footer/index'
@@ -14,7 +14,7 @@ import { createStackNavigator } from 'react-navigation'
 class Montagem extends Component {
 
     componentDidMount() {
-        debugger
+       // debugger
     }
 
     static navigationOptions = ({ navigation }) => ({

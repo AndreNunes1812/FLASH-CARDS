@@ -3,10 +3,9 @@ import PropTypes from 'prop-types'
 import { reduxForm } from 'redux-form'
 import { bindActionCreators } from "redux"
 import { connect } from 'react-redux'
-import { addCardToDeck, remover, getCards, saveKey, getKey } from '../Storage'
+import { addCardToDeck, getCards, getKey } from '../Storage'
 import { funcSetCards } from '../../actions/cards'
 import { Card, ButtonGroup } from 'react-native-elements'
-
 
 import {
     View,
@@ -14,15 +13,14 @@ import {
     StyleSheet,
     Text,
     Alert,
-    Label
-
+    TouchableOpacity
 } from 'react-native'
 
 class PerguntaCard extends Component {
 
     cards = []
     item = null
-    titulo= null
+    titulo = null
     questions = []
     quantidade = 0
 
@@ -31,86 +29,69 @@ class PerguntaCard extends Component {
         qtdSalva: 1,
         infPergunta: null,
         infResposta: null,
-        disableSalvar: false
+        disableSalvar: false,
+        isDisabled: true
     }
 
     componentDidMount() {
-        console.log('Fui chamado:')
-        this._chamarPegunta()      
-
+        this._chamarPegunta()
     }
 
     _chamarPegunta() {
-        getKey(this.titulo).then((value)=>{
-            console.log('Data:', value)
-
-            console.log('Data JSON:', JSON.parse( value))
-            
-            if (JSON.parse( value) !== null) {
-                const key = Object.values(JSON.parse( value));
-                console.log('key:', key)
-                console.log('key 2:', key[0])
-    
-                console.log('key title:', key[0].title)
-                console.log('key question:', key[0].questions)
+        getKey(this.titulo).then((value) => {
+            if (JSON.parse(value) !== null) {
+                const key = Object.values(JSON.parse(value));
             }
-            
         })
-
     }
 
-    _salvarPergunta(pergunta , resposta) {
-        console.log('this.titulo:', this.titulo)
-
-        addCardToDeck(this.titulo , {
+    _salvarPergunta(pergunta, resposta) {
+        addCardToDeck(this.titulo, {
             question: pergunta,
             answer: resposta,
-        }).then(()=>{
-
-            console.log('Apos salvar valores',this.state.qtdSalva, this.questions.length)
+        }).then(() => {
             this._atualizarCards()
             Alert.alert('Card salvo com sucesso!');
-
         })
-        
-     //   this.questions.push({ 'question': pergunta, 'answer': resposta })
-             
-     //   let card = this.titulo
-      //  saveKey({ [card]: { title: card, 'questions':  this.questions } }, card)
-
-        
     }
 
     _atualizarCards() {
-        console.log('_atualizarCards Pergunta')
         getCards().then((data) => {
             this.props.funcSetCards(data)
-            console.log('data:', data)
         })
     }
 
-    updateIndex = () => {
+    _onChange(ref) {
+        console.log('ref:',ref)
+        if (ref) {
+            this.setState({isDisabled: false})
+        } else {
+            this.setState({isDisabled: true})
+        }
+    }
+
+    _updateIndex() {
+        console.log('updateIndex', this.infPergunta._lastNativeText, this.infResposta._lastNativeText )
+
         this.setState({ qtdSalva: this.state.qtdSalva + 1, infPergunta: null, infResposta: null })
-        console.log('Pergunta:', this.infPergunta._lastNativeText)
-        console.log('Resposta:', this.infResposta._lastNativeText)
-        
+
         this.infPergunta.clear()
         this.infResposta.clear()
+
+
+
         this._salvarPergunta(this.infPergunta._lastNativeText, this.infResposta._lastNativeText)
+        this.setState({isDisabled: true})
     }
 
     render() {
 
-        const { navigation , cards } = this.props;
+        const { navigation, cards } = this.props;
         this.quantidade = navigation.getParam('quantidade', 'NO-ID')
         this.titulo = navigation.getParam('titulo', 'card não disponivel')
         this.item = navigation.getParam('item', 'Objeto não encontrado')
         this.questions = navigation.getParam('questions', 'Objeto não encontrado')
         this.cards = cards
-
-        console.log('Item:', this.item) 
-        console.log('Item questions:', this.questions)    
-        console.log('PerguntaCards redux:', this.cards) 
 
         return (
             <View >
@@ -118,31 +99,34 @@ class PerguntaCard extends Component {
                 <Card title={this.titulo}>
                     <View >
                         <Text style={styles.titleText} >
-                           Nº pergunta {this.state.qtdSalva} {'\n'}{'\n'}
+                            Nº pergunta {this.state.qtdSalva} {'\n'}{'\n'}
                         </Text>
                         <TextInput
-                            placeholder="Informe sua pergunta?"
+                            placeholder="Informe sua pergunta"
                             style={styles.input}
+                            onChangeText={(ref) => this._onChange(ref)}
+                            underlineColorAndroid="transparent"
                             ref={ref => {
                                 this.infPergunta = ref;
-                              }}
-
+                            }}
                         />
                         <TextInput
-                            placeholder="Informe sua Resposta?"
+                            placeholder="Informe sua resposta"
                             style={styles.input}
+                            onChangeText={(ref) => this._onChange(ref)}
+                            underlineColorAndroid="transparent"
                             ref={ref => {
                                 this.infResposta = ref;
-                              }}
-
+                            }}
                         />
-                        <ButtonGroup
-                            disableSelected= {this.state.disableSalvar}
-                            selectedBackgroundColor="blue"
-                            onPress={this.updateIndex}
-                            selectedIndex={this.state.index}
-                            buttons={['Salvar']}
-                            containerStyle={{ height: 30 }} />
+                        <View style={styles.resultBottom}>
+                            <TouchableOpacity disabled={this.state.isDisabled} style={[styles.button, { backgroundColor: '#2196F3' }]} onPress={() => this._updateIndex()}>
+                                <Text style={[styles.buttonText, { color: '#ffff' }]}>Salvar</Text>
+                            </TouchableOpacity>
+                            {/* <TouchableOpacity disabled={this.state.isDisabled} style={[styles.button, { backgroundColor: '#F15750' }]} onPress={() =>  this.updateIndex('nao') }>
+                                <Text style={[styles.buttonText, { color: '#fff' }]}> Não</Text>
+                            </TouchableOpacity> */}
+                        </View>
                     </View>
                 </Card>
             </View>
@@ -169,7 +153,35 @@ const styles = StyleSheet.create({
     titleText: {
         fontSize: 20,
         fontWeight: 'bold',
-      },
+    },
+    submit:{
+        marginRight:20,
+        marginLeft:20,
+        marginTop:10,
+        paddingTop:20,
+        paddingBottom:20,
+        backgroundColor:'#2196F3',
+        borderRadius:10,
+        borderWidth: 1,
+        borderColor: '#fff'
+    },
+    submitText:{
+        color:'#fff',
+        textAlign:'center',
+    },
+    button: {
+        padding: 20,
+        margin: 5,
+        marginLeft: 10,
+        marginRight: 10,
+        borderRadius: 5,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderWidth: 1,
+    },
+    resultBottom: {
+        marginTop: 30,
+    }
 })
 
 PerguntaCard.propTypes = {
@@ -187,7 +199,6 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return (bindActionCreators({
-        // funcAddCard: (cards) => funcAddCard(cards),
         funcSetCards: (cardsUpdate) => funcSetCards(cardsUpdate)
     }, dispatch))
 }

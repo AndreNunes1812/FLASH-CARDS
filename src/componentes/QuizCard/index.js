@@ -5,14 +5,14 @@ import { bindActionCreators } from "redux"
 import { connect } from 'react-redux'
 import { getDeck } from '../Storage'
 import { funcSetCards } from '../../actions/cards'
-import { Card, Button, ButtonGroup } from 'react-native-elements'
-import Icon from 'react-native-vector-icons/FontAwesome';
+import { Card, Button} from 'react-native-elements'
 
 import {
     View,
     StyleSheet,
     Text,
     Alert,
+    TouchableOpacity
 } from 'react-native'
 
 class QuizCard extends Component {
@@ -22,7 +22,8 @@ class QuizCard extends Component {
     titulo = null
     questions = []
     quantidade = 1
-    pergunta= ''
+    indexPergunta = 0
+    pergunta = ''
     resposta = ''
 
     state = {
@@ -39,20 +40,11 @@ class QuizCard extends Component {
     }
 
     componentDidMount() {
-        console.log('Fui chamado:')
-        this.questions = this.props.navigation.getParam('questions', 'Objeto não encontrado')
-        console.log('Item questions:', this.questions)
-        console.log('Item question length:', this.questions.length)  
-        
-        if (this.questions.length === 0 ) {
-            Alert.alert('Favor gerar as perguntas.')
-        } else {
 
-            this._chamarPegunta()
+        console.log('QUIZ', this.props.navigation)
 
-        }
+        this._chamarPegunta()
 
-        
     }
     _pergunta() {
         this.setState({ cardResposta: false, cardPergunta: true })
@@ -63,31 +55,33 @@ class QuizCard extends Component {
     }
 
     _capturarPerguntaResposta(capturar) {
-        this.setState({pergunta: capturar.question, resposta: capturar.answer })  
+        this.setState({ pergunta: capturar.question, resposta: capturar.answer })
     }
 
-    _respostaQuiz( resposta) {
-        if (this.quantidade === this.state.numQuestao ) {
-            console.log('FINALIZOU', this.props)
-            this.props.navigation.push('FinalizarQuiz',{
+    _respostaQuiz(resposta) {
+        this.indexPergunta = this.indexPergunta + 1
+        if (this.quantidade === this.state.numQuestao) {
+            this.props.navigation.push('FinalizarQuiz', {
                 navegacao: this.state
             })
-        } else {           
-            this._capturarPerguntaResposta(this.questions[this.quantidade])
-        }    
-         
-     
-        this.quantidade= this.quantidade + 1
+        } else {
+            this._capturarPerguntaResposta(this.questions[this.indexPergunta])
+            this.quantidade = this.quantidade + 1
+        }
     }
 
     _chamarPegunta() {
-
         getDeck(this.titulo)
-        .then((deck) => {
-            this.setState({ numQuestao: deck.questions.length }, ()=>{
-                this._capturarPerguntaResposta(this.questions[0])
-            })            
-        })
+            .then((deck) => {
+                if (deck.questions.length === 0) {
+                    Alert.alert('Favor gerar as perguntas.')
+                } else {
+                    this.setState({ numQuestao: deck.questions.length }, () => {
+                        this.questions = deck.questions
+                        this._capturarPerguntaResposta(this.questions[this.indexPergunta])
+                    })
+                }
+            })
     }
 
     render() {
@@ -99,7 +93,7 @@ class QuizCard extends Component {
         return (
             <View>
                 <View >
-                  
+
                     {this.state.cardPergunta && this.state.numQuestao > 0 ? (
                         <Card title={this.titulo}>
                             <View >
@@ -107,7 +101,7 @@ class QuizCard extends Component {
                                     Quiz: {this.quantidade} / {this.state.numQuestao} {'\n'}{'\n'}
                                 </Text>
 
-                                 <View style={styles.containerRow} >
+                                <View style={styles.containerRow} >
 
                                     <Text style={styles.pergunta} >
                                         {this.state.pergunta}  {'\n'}{'\n'}{'\n'}
@@ -125,27 +119,20 @@ class QuizCard extends Component {
                                 />
 
                                 <View style={styles.containerRow} >
-                                    <Button
-                                        style={styles.texto}
-                                        onPress={() => this._respostaQuiz('sim')}
-                                        title="Sim"
-                                        color="#841584"
-                                    />
-                                    <Button
-                                        style={styles.texto}
-                                        onPress={() => this._respostaQuiz('nao')}
-                                        title="Não"
-                                        color="#841584"
-                                     />
+                                    <TouchableOpacity disabled={this.state.isDisabled} style={[styles.button, { backgroundColor: '#2196F3' }]} onPress={() => this._respostaQuiz('sim')}>
+                                        <Text style={[styles.buttonText, { color: '#ffff' }]}>Salvar</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity disabled={this.state.isDisabled} style={[styles.button, { backgroundColor: '#F15750' }]} onPress={() => this._respostaQuiz('nao')}>
+                                        <Text style={[styles.buttonText, { color: '#fff' }]}> Não</Text>
+                                    </TouchableOpacity>
                                 </View>
                             </View>
                         </Card>
-                    ) : (<Text style={styles.titleText}> Não a QUIZ disponível</Text>)}
+                    ) : (this.state.cardPergunta ? <Text style={styles.titleText}> Não a QUIZ disponível</Text> : (null))}
                     {this.state.cardResposta && this.state.numQuestao > 0 ? (
                         <Card title={this.titulo}
                             backgroundColor="#1919e6">
                             <View >
-
                                 <Text style={styles.titleText} >
                                     {this.state.resposta}   {'\n'}{'\n'}
                                 </Text>
@@ -155,13 +142,14 @@ class QuizCard extends Component {
                                     color="#841584"
                                     backgroundColor="#ffffff"
                                 />
-                                <ButtonGroup
-                                    disableSelected={this.state.disableSalvarResp}
-                                    selectedBackgroundColor="#1919e6"
-                                    onPress={this.updateIndex}
-                                    selectedIndex={this.state.index}
-                                    buttons={['Sim', 'Não']}
-                                    containerStyle={{ height: 30 }} />
+                                <View style={styles.containerRow} >
+                                    <TouchableOpacity disabled={this.state.isDisabled} style={[styles.button, { backgroundColor: '#2196F3' }]} onPress={() => this._respostaQuiz('sim')}>
+                                        <Text style={[styles.buttonText, { color: '#ffff' }]}>Salvar</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity disabled={this.state.isDisabled} style={[styles.button, { backgroundColor: '#F15750' }]} onPress={() => this._respostaQuiz('nao')}>
+                                        <Text style={[styles.buttonText, { color: '#fff' }]}> Não</Text>
+                                    </TouchableOpacity>
+                                </View>
                             </View>
                         </Card>
                     ) : (null)}
@@ -169,7 +157,6 @@ class QuizCard extends Component {
             </View>
         )
     }
-
 }
 
 const styles = StyleSheet.create({
@@ -180,13 +167,24 @@ const styles = StyleSheet.create({
     containerRow: {
         //flex: 1,
         flexDirection: 'row',
+        justifyContent: 'space-between',
     },
     button: {
-        padding: 30,
+        padding: 20,
+        margin: 5,
+        marginLeft: 10,
+        marginRight: 10,
+        borderRadius: 5,
+        justifyContent: 'center',
+        alignItems: 'center',
+        borderWidth: 1,
     },
-    perguntaText:{
+    resultBottom: {
+        marginTop: 30,
+    },
+    perguntaText: {
         width: 150,
-        fontSize:30,
+        fontSize: 30,
         fontWeight: 'bold',
     },
 
