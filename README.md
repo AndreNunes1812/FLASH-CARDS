@@ -1,6 +1,6 @@
 # Projeto Flashcards Móveis
 
-Este projeto atende ao terceito modulo do **Programa Nanodegree - Desenvolvimento React** da Udacity.
+Este projeto atende ao terceiro modulo do **Programa Nanodegree - Desenvolvimento React** da Udacity.
 
 ## Objetivo
 
@@ -10,10 +10,9 @@ Criar um aplicativo para dispositivos móveis (Android ou iOS - ou ambos) que pe
 
 #### Configuração do Projeto
 A aplicação foi criada com o create-react-app, após a aplicação criada entrar dentro do projeto gerado e digitar o comando npm install para instalar todas as dependência necessárias e após, digitar **expo start** para que a aplicação seja iniciada.<br />
-O arquivo README descreve todas as funcionalidades do projeto.
 
 ####  Página principal 
-A página principal lista todos os cards (baralho) que foram criados, caso não tenha sido criado poderá ser feito ao clicar em adcionar baralho, caso já tenha sido criado pode-se clicar no card é o mesmo será direcionado para uma outra pagina que tera informações especificas.
+A página principal lista todos os cards (baralho) que foram criados, caso não tenha sido criado poderá ser feito ao clicar em adcionar baralho, caso já tenha sido criado pode-se clicar no card é o mesmo será direcionado para uma outra pagina.
 
 #### Página do Card - Formulário basico de cadastro de quiz e perguntas
 
@@ -26,7 +25,7 @@ Ao tentar criar um quiz sem perguntas já digitadas será apresentada uma mensag
 
 ####  Página de Perguntas - Formulário basico de cadastro contendo as seguintes informações
 
-A pergunta contem o nº da pergunta com a sua respectiva pergunta e resposta, após a conformação da pergunta, poderá ser criada outra pergunta automaticamente.
+A pergunta contem o nº da pergunta com a sua respectiva pergunta e resposta, após a confirmação da pergunta, poderá ser criada outra pergunta automaticamente.
 
 1)Informar a Pergunta<br />
 2)Informar a Resposta<br />
