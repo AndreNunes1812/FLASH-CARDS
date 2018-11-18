@@ -113,7 +113,6 @@ Card.propTypes = {
 }
 
 const mapStateToProps = (state) => {
-    console.log('State:', state)
     return {
         cards: state.cards,
         cardsUpdate: this.cards

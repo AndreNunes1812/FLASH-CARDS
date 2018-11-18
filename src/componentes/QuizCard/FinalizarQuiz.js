@@ -46,7 +46,6 @@ const styles = StyleSheet.create({
     },
 
     textoObrigado: {
-        //backgroundColor:'#68a0cf',
         textAlign: 'center',
         margin: 20,
         height: 48,
@@ -54,10 +53,8 @@ const styles = StyleSheet.create({
         fontWeight: 'bold'
     },
     texto: {
-        // backgroundColor: '#2196F3',
         textAlign: 'center',
         margin: 20,
-        //  height: 48,
         fontSize: 20,
         fontWeight: 'bold'
     },

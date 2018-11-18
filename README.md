@@ -47,7 +47,9 @@ O app controla o agendamento do dia, ou seja,  caso não haja nenhum quiz feito 
 
 * Para a instalação das dependência do projeto é necessário está dentro da pasta do projeto e digitar `npm install`
 
-* Para executar a aplicação: `npm start`
+* Para executar a aplicação: `expo start`
+
+* Esse App foi testado na plataforma Android (Motorolla G4 Plus)
 
 ## O Projeto FlashCards oferece a seguinte estrutura:
 ```bash

@@ -11,7 +11,8 @@ import {
     Text, 
     Alert, 
     FlatList, 
-    TouchableWithoutFeedback 
+    TouchableWithoutFeedback, 
+    ActivityIndicator
 } from 'react-native'
 import { 
     getCards, 
@@ -30,7 +31,12 @@ class ListagemCard extends Component {
         super(props)
     }
 
-    componentDidMount() {       
+    state = {
+        loading: true
+    }
+
+    componentDidMount() {  
+           
         this._atualizarCards()
     }
 
@@ -43,10 +49,13 @@ class ListagemCard extends Component {
 
     _atualizarCards() {
         getCards().then((data) => {
-            if (!containsLocalNotification()){
+           if (!containsLocalNotification()){
                 setLocalNotification()
            }
             this.props.funcSetCards(data)
+            if (data) {
+                this.setState({loading: false})
+            }
         })
     }
 
@@ -67,6 +76,10 @@ class ListagemCard extends Component {
 
         return (
             <View style={styles.container}>
+                <View style={styles.indicador}>
+                    {this.state.loading ? <ActivityIndicator size="large" color="#2196F3" /> : (null)}
+                </View>
+
                 {this.newDecks != null ? (
                     <FlatList
                         data={Object.keys(this.newDecks).map((id) => this.newDecks[id])}
@@ -154,13 +167,16 @@ const styles = StyleSheet.create({
         paddingLeft: 15,
         fontWeight: 'bold',
         marginLeft: 120
+    },
+    indicador: {
+        justifyContent: 'center',
+        alignItems: 'center',
     }
 });
 
 ListagemCard.propTypes = {
     funcSetCards: PropTypes.func.isRequired,
 }
-
 
 const mapStateToProps = (state) => {
     return {
