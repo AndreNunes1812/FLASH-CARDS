@@ -1,11 +1,9 @@
-import { ADD_CARD, SET_CARDS } from '../actions/cards'
+import { SET_CARDS } from '../actions/cards'
 
 export default function index(state = [], action) {
 
     switch (action.type) {
         case SET_CARDS:
-            // console.log('SET CARDS NO REDUCER:', action.cards)
-
             if (action.cards !== undefined) {
                 state = []
                 return [...state, {

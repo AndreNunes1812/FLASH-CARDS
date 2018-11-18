@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { reduxForm } from 'redux-form'
 import { bindActionCreators } from "redux"
 import { connect } from 'react-redux'
-import { saveDeckTitle, remover, getCards, saveKey, getKey } from '../Storage'
+import { saveDeckTitle, remover, getCards } from '../Storage'
 import { funcSetCards } from '../../actions/cards'
 import ListagemCard from '../ListagemCard/index'
 
@@ -33,8 +33,7 @@ class Card extends Component {
     }
 
     _onPress = () => {  
-        console.log('cards state:')     
-                
+              
         if(this.state.card === null) {
             Alert.alert('Informar o nome do Baralho.')
         } else {
@@ -48,25 +47,13 @@ class Card extends Component {
     }
 
     _atualizarCards() {
-        console.log('em CARD')
         getCards().then((data) => {
             this.props.funcSetCards(data)
-            console.log('data:', data)
         })
     }
 
-    // _onPressLer = () => {
-    //     let card = this.state.card
-    //     getKey(card)
-    //     Alert.alert('Card _onPressLer!');
-    // }
-
     _onPressRemover = () => {        
         this._removerCard(this.state.card)        
-    }
-
-    _editar = () => {
-        console.log('EDICAO CARDS:')
     }
 
     async _removerCard(rmCard) {
@@ -84,7 +71,6 @@ class Card extends Component {
                 <TextInput style={styles.input}
                     placeholder="Inserir CARD"
                     name="card"
-                    //value={this.state.card}
                     onChangeText={(e) => {
                         this.setState({ card: e })
                     }}
@@ -117,7 +103,6 @@ const styles = StyleSheet.create({
         height: 40,
     },
     containerRow: {
-        //flex: 1,
         flexDirection: 'row',
     },
 })
@@ -137,7 +122,6 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return (bindActionCreators({
-        // funcAddCard: (cards) => funcAddCard(cards),
         funcSetCards: (cards) => funcSetCards(cards)
     }, dispatch))
 }

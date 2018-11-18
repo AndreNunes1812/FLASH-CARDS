@@ -36,15 +36,9 @@ class CardNumber extends Component {
         this._atualizarCards()
     }
 
-    componentWillMount() {
-        console.log('componentWillMount')
-    }
-
     _atualizarCards() {
-        console.log('_atualizarCards')
         getCards().then((data) => {
             this.props.funcSetCards(data)
-            console.log('data:', data)
         })
     }
 
@@ -64,10 +58,6 @@ class CardNumber extends Component {
         this.titulo = navigation.getParam('titulo', 'card não disponivel')
         this.questions = navigation.getParam('questions', 'card não disponivel') 
         this.quantidade = navigation.getParam('quantidade', 'quantidade não informada')
-
-        console.log('item: ', this.item)
-
-        console.log('Navigation ', navigation)
         
         return (
             <View >

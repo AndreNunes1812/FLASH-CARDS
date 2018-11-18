@@ -5,7 +5,7 @@ import { bindActionCreators } from "redux"
 import { connect } from 'react-redux'
 import { addCardToDeck, getCards, getKey } from '../Storage'
 import { funcSetCards } from '../../actions/cards'
-import { Card, ButtonGroup } from 'react-native-elements'
+import { Card } from 'react-native-elements'
 
 import {
     View,
@@ -62,7 +62,6 @@ class PerguntaCard extends Component {
     }
 
     _onChange(ref) {
-        console.log('ref:',ref)
         if (ref) {
             this.setState({isDisabled: false})
         } else {
@@ -71,15 +70,9 @@ class PerguntaCard extends Component {
     }
 
     _updateIndex() {
-        console.log('updateIndex', this.infPergunta._lastNativeText, this.infResposta._lastNativeText )
-
         this.setState({ qtdSalva: this.state.qtdSalva + 1, infPergunta: null, infResposta: null })
-
         this.infPergunta.clear()
         this.infResposta.clear()
-
-
-
         this._salvarPergunta(this.infPergunta._lastNativeText, this.infResposta._lastNativeText)
         this.setState({isDisabled: true})
     }
@@ -209,6 +202,4 @@ export default connect(
 )(reduxForm({
     form: 'perguntaCard',
     enableReinitialize: true,
-    //   validate,
-    //   warn
-})(PerguntaCard));
+})(PerguntaCard))

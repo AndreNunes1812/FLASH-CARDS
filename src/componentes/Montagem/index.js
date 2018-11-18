@@ -13,13 +13,7 @@ import { createStackNavigator } from 'react-navigation'
 
 class Montagem extends Component {
 
-    componentDidMount() {
-       // debugger
-    }
-
-    static navigationOptions = ({ navigation }) => ({
-
-    });
+    static navigationOptions = ({ navigation }) => ({});
 
     render() {
         return (
@@ -95,7 +89,6 @@ const MontagemApp = createStackNavigator({
             header: null,
         })
     },
-
 })
 
-export default MontagemApp;
+export default MontagemApp

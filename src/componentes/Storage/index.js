@@ -4,34 +4,6 @@ import { Permissions, Notifications } from 'expo'
 export const CARD_STORAGE_KEY = 'cardnew'
 export const NOTIFICATION_KEY = 'FlashCards:notifications'
 
-
-//let database = {}
-
-// function getItem($key) {
-//     return database[$key] ? database[$key] : undefined;
-// }
-
-// function setItem($key, data) {
-//     database[$key] = data;
-// }
-
-// export function setCard(card) {
-
-//     let storage = getItem(CARD_STORAGE_KEY)
-
-//     if (storage === undefined) {
-//         storage = {}
-//     }
-
-//     storage = {
-//         ...storage,
-//         ...card
-//     }
-
-//     setItem(CARD_STORAGE_KEY, storage)
-
-// }
-
 export async function getKey(item) {
     console.log("getKey dentro:", item);
     try {
@@ -75,17 +47,6 @@ export function addCardToDeck(title, card) {
             }
         })
 }
-
-
-// export async function saveKey(value, card) {
-//     // console.log('Save:', value, card)
-
-//     try {
-//        await AsyncStorage.mergeItem(card, JSON.stringify(value));
-//     } catch (error) {
-//         console.log("Error saving data" + error);
-//     }
-// }
 
 export function getCards() {
 

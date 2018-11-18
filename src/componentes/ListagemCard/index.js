@@ -30,13 +30,11 @@ class ListagemCard extends Component {
         super(props)
     }
 
-    componentDidMount() {
-       
+    componentDidMount() {       
         this._atualizarCards()
     }
 
     _remover(rmCard) {
-        console.log('Remover:', rmCard)
         remover(rmCard).then(() => {
             this._atualizarCards()
         })
@@ -44,21 +42,15 @@ class ListagemCard extends Component {
     }
 
     _atualizarCards() {
-        console.log('_atualizarCards')
         getCards().then((data) => {
-
-             console.log('!containsLocalNotification()', !containsLocalNotification())
-
             if (!containsLocalNotification()){
                 setLocalNotification()
            }
             this.props.funcSetCards(data)
-            console.log('data:', data)
         })
     }
 
     _editar(title) {
-        console.log('EDICAO:', title)
         this.setState({})
     }
 
@@ -123,21 +115,12 @@ class ListagemCard extends Component {
                                     </View>
                                 </TouchableWithoutFeedback>
                             </View>
-
                         )
                         }
                     />
-
-
                 ) : (null)}
-
             </View>
         );
-    }
-
-    actionOnRow(item) {
-        console.log('Selected Item :', item);
-
     }
 }
 
@@ -180,8 +163,6 @@ ListagemCard.propTypes = {
 
 
 const mapStateToProps = (state) => {
-    console.log('State Listagem:', state.cards)
-
     return {
         cardsReducer: state.cards,
         sendCards: this.cards
@@ -194,13 +175,9 @@ const mapDispatchToProps = (dispatch) => {
     }, dispatch))
 }
 
-//export default ListagemCard
-
 export default connect(
     mapStateToProps, mapDispatchToProps
 )(reduxForm({
     form: 'listagemCard',
     enableReinitialize: true,
-    //   validate,
-    //   warn
 })(ListagemCard));

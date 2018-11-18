@@ -3,10 +3,6 @@ import { View, StyleSheet, TouchableOpacity, Text } from 'react-native'
 
 export default class Footer extends Component {
 
-    componentDidMount(){
-        // console.log('Props:', this.props)
-    }
-
     render() {
 
         return (

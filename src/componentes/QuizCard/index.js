@@ -40,12 +40,9 @@ class QuizCard extends Component {
     }
 
     componentDidMount() {
-
-        console.log('QUIZ', this.props.navigation)
-
         this._chamarPegunta()
-
     }
+
     _pergunta() {
         this.setState({ cardResposta: false, cardPergunta: true })
     }
@@ -120,10 +117,10 @@ class QuizCard extends Component {
 
                                 <View style={styles.containerRow} >
                                     <TouchableOpacity disabled={this.state.isDisabled} style={[styles.button, { backgroundColor: '#2196F3' }]} onPress={() => this._respostaQuiz('sim')}>
-                                        <Text style={[styles.buttonText, { color: '#ffff' }]}>Salvar</Text>
+                                        <Text style={[styles.buttonText, { color: '#ffff' }]}>Correta</Text>
                                     </TouchableOpacity>
                                     <TouchableOpacity disabled={this.state.isDisabled} style={[styles.button, { backgroundColor: '#F15750' }]} onPress={() => this._respostaQuiz('nao')}>
-                                        <Text style={[styles.buttonText, { color: '#fff' }]}> Não</Text>
+                                        <Text style={[styles.buttonText, { color: '#fff' }]}> Incorreta</Text>
                                     </TouchableOpacity>
                                 </View>
                             </View>
@@ -165,7 +162,6 @@ const styles = StyleSheet.create({
         flexDirection: 'column',
     },
     containerRow: {
-        //flex: 1,
         flexDirection: 'row',
         justifyContent: 'space-between',
     },
@@ -228,6 +224,4 @@ export default connect(
 )(reduxForm({
     form: 'perguntaCard',
     enableReinitialize: true,
-    //   validate,
-    //   warn
-})(QuizCard));
+})(QuizCard))
