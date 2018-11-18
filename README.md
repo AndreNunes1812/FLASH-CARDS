@@ -49,7 +49,7 @@ O app controla o agendamento do dia, ou seja,  caso não haja nenhum quiz feito 
 
 * Para executar a aplicação: `npm start`
 
-## O Projeto Leitura oferece a seguinte estrutura:
+## O Projeto FlashCards oferece a seguinte estrutura:
 ```bash
 ├── CONTRIBUTING.md
 ├── README.md - This file.
