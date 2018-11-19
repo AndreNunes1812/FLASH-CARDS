@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { reduxForm } from 'redux-form'
 import { bindActionCreators } from "redux"
 import { connect } from 'react-redux'
-import { addCardToDeck, getCards, getKey } from '../Storage'
+import { addCardToDeck, getBaralhos, getKey } from '../Storage'
 import { funcSetCards } from '../../actions/cards'
 import { Card } from 'react-native-elements'
 
@@ -40,7 +40,7 @@ class PerguntaCard extends Component {
     _chamarPegunta() {
         getKey(this.titulo).then((value) => {
             if (JSON.parse(value) !== null) {
-                const key = Object.values(JSON.parse(value));
+                const key = Object.values(JSON.parse(value))
             }
         })
     }
@@ -51,12 +51,12 @@ class PerguntaCard extends Component {
             answer: resposta,
         }).then(() => {
             this._atualizarCards()
-            Alert.alert('Card salvo com sucesso!');
+            Alert.alert('Pergunta salva com sucesso!')
         })
     }
 
     _atualizarCards() {
-        getCards().then((data) => {
+        getBaralhos().then((data) => {
             this.props.funcSetCards(data)
         })
     }
@@ -70,11 +70,17 @@ class PerguntaCard extends Component {
     }
 
     _updateIndex() {
-        this.setState({ qtdSalva: this.state.qtdSalva + 1, infPergunta: null, infResposta: null })
-        this.infPergunta.clear()
-        this.infResposta.clear()
-        this._salvarPergunta(this.infPergunta._lastNativeText, this.infResposta._lastNativeText)
-        this.setState({isDisabled: true})
+
+        if (( this.infPergunta._lastNativeText === undefined ) || ( this.infResposta._lastNativeText === undefined)) {
+            Alert.alert('Favor informar Pergunta / Resposta')
+        } else {
+            this.setState({ qtdSalva: this.state.qtdSalva + 1, infPergunta: null, infResposta: null })
+            this.infPergunta.clear() 
+            this.infResposta.clear()
+            this._salvarPergunta(this.infPergunta._lastNativeText, this.infResposta._lastNativeText)
+            this.setState({isDisabled: true})
+        }
+       
     }
 
     render() {
@@ -97,7 +103,7 @@ class PerguntaCard extends Component {
                         <TextInput
                             placeholder="Informe sua pergunta"
                             style={styles.input}
-                            onChangeText={(ref) => this._onChange(ref)}
+                            onChangeText={(ref) => this._onChange(ref)}                           
                             underlineColorAndroid="transparent"
                             ref={ref => {
                                 this.infPergunta = ref;
@@ -116,9 +122,6 @@ class PerguntaCard extends Component {
                             <TouchableOpacity disabled={this.state.isDisabled} style={[styles.button, { backgroundColor: '#2196F3' }]} onPress={() => this._updateIndex()}>
                                 <Text style={[styles.buttonText, { color: '#ffff' }]}>Salvar</Text>
                             </TouchableOpacity>
-                            {/* <TouchableOpacity disabled={this.state.isDisabled} style={[styles.button, { backgroundColor: '#F15750' }]} onPress={() =>  this.updateIndex('nao') }>
-                                <Text style={[styles.buttonText, { color: '#fff' }]}> Não</Text>
-                            </TouchableOpacity> */}
                         </View>
                     </View>
                 </Card>
@@ -133,9 +136,6 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         flexDirection: 'column',
-    },
-    button: {
-        padding: 30,
     },
     texto: {
         backgroundColor: '#2196F3',
@@ -183,7 +183,6 @@ PerguntaCard.propTypes = {
 }
 
 const mapStateToProps = (state) => {
-    console.log('State PerguntaCard:', state)
     return {
         cards: state.cards,
         cardsUpdate: this.cards

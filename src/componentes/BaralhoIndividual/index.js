@@ -5,7 +5,7 @@ import { connect } from 'react-redux'
 import { reduxForm } from 'redux-form'
 import { Card, ButtonGroup } from 'react-native-elements'
 import { funcSetCards } from '../../actions/cards'
-import { getCards } from '../Storage'
+import { getBaralhos } from '../Storage'
 import {
     View,
     StyleSheet,
@@ -13,7 +13,7 @@ import {
     Text
 } from 'react-native'
 
-class CardNumber extends Component {
+class BaralhoIndividual extends Component {
 
     cards = []
     titulo = ''
@@ -23,13 +23,12 @@ class CardNumber extends Component {
 
     constructor(props) {
         super(props)
-
-        state = {
-            index: 0,
-            myNumber: 0
-        }
-        self = this
         this.onChanged = this.onChanged.bind(this)
+    }
+
+    state = {
+        index: 0,
+        myNumber: 0
     }
     
     componentDidMount() {
@@ -37,7 +36,7 @@ class CardNumber extends Component {
     }
 
     _atualizarCards() {
-        getCards().then((data) => {
+        getBaralhos().then((data) => {
             this.props.funcSetCards(data)
         })
     }
@@ -59,11 +58,23 @@ class CardNumber extends Component {
         this.questions = navigation.getParam('questions', 'card não disponivel') 
         this.quantidade = navigation.getParam('quantidade', 'quantidade não informada')
         
+        if (this.props.cards[0] !== undefined) {
+            let tituloNew = this.titulo
+            const key = Object.values(this.props.cards[0]);
+            this.newDecks = key[0]
+            Object.keys(this.newDecks).
+            map((id) => {            
+               if (this.newDecks[id].title === tituloNew) {
+                  this.questions = this.newDecks[id].questions.length
+               } 
+            })            
+        }
+
         return (
             <View >
                 <Card title={this.titulo} >
                     <View >
-                        <Text>Nº de baralhos {this.questions.length}</Text>
+                        <Text>Nº de baralhos {this.questions}</Text>
                         <ButtonGroup
                             selectedBackgroundColor="blue"
                             onPress={(index) => {
@@ -76,7 +87,7 @@ class CardNumber extends Component {
                                         questions: this.questions
                                     })
                                 } else {
-                                    if (this.quantidade === 0) {
+                                    if (this.questions === 0) {
                                         Alert.alert('Não a pergunta(s) para o Quiz!');
                                     } else {
                                         navigation.navigate('QuizCard', {
@@ -89,7 +100,7 @@ class CardNumber extends Component {
                                     }
                                 }
                             }}
-                            selectedIndex={self.state.index}
+                            selectedIndex={this.state.index}
                             buttons={['Quiz', 'Perguntas']}
                             containerStyle={{ height: 30 }} />
                     </View>
@@ -115,15 +126,13 @@ const styles = StyleSheet.create({
     }
 })
 
-CardNumber.propTypes = {
+BaralhoIndividual.propTypes = {
     funcSetCards: PropTypes.func.isRequired,
 }
 
 const mapStateToProps = (state) => {
-    console.log('State Listagem:', state.cards)
-
     return {
-        cardsReducer: state.cards,
+        cards: state.cards,
         sendCards: this.cards
     }
 }
@@ -141,4 +150,4 @@ export default connect(
     enableReinitialize: true,
     //   validate,
     //   warn
-})(CardNumber));
+})(BaralhoIndividual))

@@ -15,17 +15,17 @@ import {
     ActivityIndicator
 } from 'react-native'
 import { 
-    getCards, 
+    getBaralhos, 
     remover,
     containsLocalNotification, 
     setLocalNotification 
 } from '../Storage'
 
 
-class ListagemCard extends Component {
+class ListagemBaralho extends Component {
 
     quantidade = 0
-    newDecks = null;
+    newBaralho = null;
 
     constructor(props) {
         super(props)
@@ -40,15 +40,8 @@ class ListagemCard extends Component {
         this._atualizarCards()
     }
 
-    _remover(rmCard) {
-        remover(rmCard).then(() => {
-            this._atualizarCards()
-        })
-        Alert.alert('Card removido com sucesso!');
-    }
-
     _atualizarCards() {
-        getCards().then((data) => {
+        getBaralhos().then((data) => {
            if (!containsLocalNotification()){
                 setLocalNotification()
            }
@@ -71,7 +64,7 @@ class ListagemCard extends Component {
 
         if (this.props.cardsReducer[0] != undefined) {
             const key = Object.values(this.props.cardsReducer[0]);
-            this.newDecks = key[0]
+            this.newBaralho = key[0]
         }
 
         return (
@@ -80,9 +73,9 @@ class ListagemCard extends Component {
                     {this.state.loading ? <ActivityIndicator size="large" color="#2196F3" /> : (null)}
                 </View>
 
-                {this.newDecks != null ? (
+                {this.newBaralho != null ? (
                     <FlatList
-                        data={Object.keys(this.newDecks).map((id) => this.newDecks[id])}
+                        data={Object.keys(this.newBaralho).map((id) => this.newBaralho[id])}
                         keyExtractor={(item, index) => index.toString()}
                         renderItem={({ item }) => (
 
@@ -90,7 +83,7 @@ class ListagemCard extends Component {
                                 <TouchableWithoutFeedback onPress={() => {
                                     this.props.montagem === 'sim' ?
                                         (
-                                            this.props.navegacao.navigation.navigate('CardNumber',
+                                            this.props.navegacao.navigation.navigate('BaralhoIndividual',
                                                 {
                                                     quantidade: item.questions,
                                                     titulo: item.title,
@@ -109,7 +102,7 @@ class ListagemCard extends Component {
                                                 {this.props.montagem === 'sim' ? (
 
                                                     <Text style={styles.textoLength}>
-                                                        {item.questions.length} cards
+                                                        {item.questions.length} baralhos
                                                     </Text>
 
                                                 ) : (null)}
@@ -174,7 +167,7 @@ const styles = StyleSheet.create({
     }
 });
 
-ListagemCard.propTypes = {
+ListagemBaralho.propTypes = {
     funcSetCards: PropTypes.func.isRequired,
 }
 
@@ -196,4 +189,4 @@ export default connect(
 )(reduxForm({
     form: 'listagemCard',
     enableReinitialize: true,
-})(ListagemCard));
+})(ListagemBaralho));

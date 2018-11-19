@@ -1,6 +1,4 @@
 import React, { Component } from 'react'
-import { NavigationActions } from 'react-navigation'
-import Icon from 'react-native-vector-icons/FontAwesome';
 import { clearLocalNotification, setLocalNotification } from '../Storage'
 
 import {
@@ -25,7 +23,7 @@ class FinalizarQuiz extends Component {
                 </View>
                 <View><Text style={styles.texto}>Você respondeu {this.props.navigation.state.params.navegacao.numQuestao } questão(oes)</Text></View>
                 <View style={styles.resultBottom}>
-                    <TouchableOpacity style={[styles.button, {backgroundColor: '#fff'}]} onPress={() => {this.props.navigation.navigate('CardNumber')}}>
+                    <TouchableOpacity style={[styles.button, {backgroundColor: '#fff'}]} onPress={() => {this.props.navigation.navigate('BaralhoIndividual')}}>
                         <Text style={[styles.buttonText, {color: '#000'}]}>Iniciar</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={[styles.button, {backgroundColor: '#000'}]}>

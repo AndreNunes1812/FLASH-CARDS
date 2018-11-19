@@ -5,10 +5,8 @@ export const CARD_STORAGE_KEY = 'cardnew'
 export const NOTIFICATION_KEY = 'FlashCards:notifications'
 
 export async function getKey(item) {
-    console.log("getKey dentro:", item);
     try {
         const value = await AsyncStorage.getItem(item)
-        console.log("value:" + value);
         return value
 
     } catch (error) {
@@ -36,7 +34,6 @@ export function getDeck(id) {
 }
 
 export function addCardToDeck(title, card) {
-    console.log('addCardToDeck:', title, card)
     return AsyncStorage.getItem(CARD_STORAGE_KEY)
         .then(results => JSON.parse(results) || {})
         .then(decks => {
@@ -48,7 +45,7 @@ export function addCardToDeck(title, card) {
         })
 }
 
-export function getCards() {
+export function getBaralhos() {
 
     return AsyncStorage.getItem(CARD_STORAGE_KEY)
         .then(results => JSON.parse(results) || {})

@@ -78,9 +78,9 @@ O app controla o agendamento do dia, ou seja,  caso não haja nenhum quiz feito 
     
 ```
 
-## Create React App
+## Create React Native App
 
-Este projeto foi inicializado com o [Create React App](https://github.com/facebookincubator/create-react-app). Você pode encontrar mais informações sobre como executar tarefas comuns [aqui](https://github.com/facebookincubator/create-react-app/blob/master/packages/react-scripts/template/README.md).
+Este projeto foi inicializado com o [Create React Native App](https://github.com/react-community/create-react-native-app). Você pode encontrar mais informações sobre como executar tarefas comuns [aqui](https://github.com/react-community/create-react-native-app).
 
 ## Contribuição
 

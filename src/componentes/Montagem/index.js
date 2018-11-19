@@ -1,10 +1,10 @@
 import React, { Component } from 'react'
 import { View, StyleSheet } from 'react-native'
 
-import ListagemCard from '../ListagemCard/index'
+import ListagemBaralho from '../ListagemBaralho/index'
 import Footer from '../Footer/index'
-import Card from '../Card/index'
-import CardNumber from '../CardNumber/index'
+import Baralho from '../Baralho/index'
+import BaralhoIndividual from '../BaralhoIndividual/index'
 import PerguntaCard from '../PerguntaCard/index'
 import QuizCard from '../QuizCard/index'
 import FinalizarQuiz from '../QuizCard/FinalizarQuiz'
@@ -18,7 +18,7 @@ class Montagem extends Component {
     render() {
         return (
             <View style={styles.container} >
-                < ListagemCard navegacao={this.props} montagem={'sim'} />
+                < ListagemBaralho navegacao={this.props} montagem={'sim'} />
                 < Footer navegacao={this.props} />
             </View>
         )
@@ -40,11 +40,11 @@ const MontagemApp = createStackNavigator({
             headerTitleStyle: { color: 'white', },
             headerStyle: {
                 backgroundColor: '#2196F3',
-            },
+            },          
         })
     },
-    CardNumber: {
-        screen: CardNumber,
+    BaralhoIndividual: {
+        screen: BaralhoIndividual,
         navigationOptions: ({ navigation }) => ({
             title: 'CARTOES',
             headerTitleStyle: { color: 'white' },
@@ -53,8 +53,8 @@ const MontagemApp = createStackNavigator({
             }
         })
     },
-    Card: {
-        screen: Card,
+    Baralho: {
+        screen: Baralho,
         navigationOptions: ({ navigation }) => ({
             title: 'ADCIONAR BARALHO',
             headerTitleStyle: { color: 'white' },
@@ -70,7 +70,7 @@ const MontagemApp = createStackNavigator({
             headerTitleStyle: { color: 'white' },
             headerStyle: {
                 backgroundColor: '#2196F3',
-            }
+            }            
         })
     },
     QuizCard: {
