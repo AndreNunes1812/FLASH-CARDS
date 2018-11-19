@@ -68,8 +68,8 @@ O app controla o agendamento do dia, ou seja,  caso não haja nenhum quiz feito 
         ├── Footer # layout da pagina de Footer
         ├── ListagemBaralho # layout de listagem dos baralhos
         ├── Montagem # componente que faz a interligação da Listagem de Card / footer.
-        ├── PerguntaCard # componente que cria a Pergunta.
-        ├── QuizCard # componente que cria o Quiz.
+        ├── Pergunta # componente que cria a Pergunta.
+        ├── Quiz # componente que cria o Quiz.
         ├── Storage # componente que gerencia as informações da Notificação e Storage.
     ├── reducers # recebem e tratam as informações para que sejam (ou não) enviadas à Store.
     ├── store # é o container que armazena e centraliza o estado geral da aplicação. Ela é imutável, ou seja, nunca se altera, apenas evolui.
