@@ -54,8 +54,8 @@ class BaralhoIndividual extends Component {
 
         const { navigation } = this.props;
         this.item = navigation.getParam('item','NO-ID')
-        this.titulo = navigation.getParam('titulo', 'card não disponivel')
-        this.questions = navigation.getParam('questions', 'card não disponivel') 
+        this.titulo = navigation.getParam('titulo', 'baralho não disponivel')
+        this.questions = navigation.getParam('questions', 'baralho não disponivel') 
         this.quantidade = navigation.getParam('quantidade', 'quantidade não informada')
         
         if (this.props.cards[0] !== undefined) {
@@ -80,7 +80,7 @@ class BaralhoIndividual extends Component {
                             onPress={(index) => {
 
                                 if (index === 1) {
-                                    navigation.navigate('PerguntaCard', {
+                                    navigation.navigate('Pergunta', {
                                         quantidade: this.quantidade,
                                         titulo: this.titulo,
                                         item: this.item,
@@ -90,7 +90,7 @@ class BaralhoIndividual extends Component {
                                     if (this.questions === 0) {
                                         Alert.alert('Não a pergunta(s) para o Quiz!');
                                     } else {
-                                        navigation.navigate('QuizCard', {
+                                        navigation.navigate('Quiz', {
                                             quantidade: this.quantidade,
                                             titulo: this.titulo,
                                             item: this.item,

@@ -10,5 +10,6 @@ export function setCards(cards) {
 export function funcSetCards(cards) {
     return dispatch => {
         dispatch( setCards(cards) )
+ 
     }    
 }

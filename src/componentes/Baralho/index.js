@@ -5,7 +5,7 @@ import { bindActionCreators } from "redux"
 import { connect } from 'react-redux'
 import { saveDeckTitle, remover, getBaralhos } from '../Storage'
 import { funcSetCards } from '../../actions/cards'
-import ListagemCard from '../ListagemCard/index'
+import ListagemBaralho from '../ListagemBaralho/index'
 
 import {
     View,
@@ -98,7 +98,7 @@ class Baralho extends Component {
                     </TouchableOpacity>
                 </View>
 
-                < ListagemCard navegacao={this.props.baralhos} montagem={'nao'} />
+                < ListagemBaralho navegacao={this.props.baralhos} montagem={'nao'} />
             </View >
         )
     }

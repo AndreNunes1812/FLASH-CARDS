@@ -5,9 +5,9 @@ import ListagemBaralho from '../ListagemBaralho/index'
 import Footer from '../Footer/index'
 import Baralho from '../Baralho/index'
 import BaralhoIndividual from '../BaralhoIndividual/index'
-import PerguntaCard from '../PerguntaCard/index'
-import QuizCard from '../QuizCard/index'
-import FinalizarQuiz from '../QuizCard/FinalizarQuiz'
+import Pergunta from '../Pergunta/index'
+import Quiz from '../Quiz/index'
+import FinalizarQuiz from '../Quiz/FinalizarQuiz'
 
 import { createStackNavigator } from 'react-navigation'
 
@@ -63,8 +63,8 @@ const MontagemApp = createStackNavigator({
             }
         })
     },
-    PerguntaCard: {
-        screen: PerguntaCard,
+    Pergunta: {
+        screen: Pergunta,
         navigationOptions: ({ navigation }) => ({
             title: 'ADCIONAR PERGUNTA',
             headerTitleStyle: { color: 'white' },
@@ -73,8 +73,8 @@ const MontagemApp = createStackNavigator({
             }            
         })
     },
-    QuizCard: {
-        screen: QuizCard,
+    Quiz: {
+        screen: Quiz,
         navigationOptions: ({ navigation }) => ({
             title: 'QUIZ',
             headerTitleStyle: { color: 'white' },

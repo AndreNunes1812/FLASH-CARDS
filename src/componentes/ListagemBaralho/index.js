@@ -9,7 +9,7 @@ import {
     View, 
     StyleSheet, 
     Text, 
-    Alert, 
+    Alert,
     FlatList, 
     TouchableWithoutFeedback, 
     ActivityIndicator
@@ -38,6 +38,13 @@ class ListagemBaralho extends Component {
     componentDidMount() {  
            
         this._atualizarCards()
+    }
+
+    _remover(rmCard) {
+        remover(rmCard).then(() => {
+            this._atualizarCards()
+        })
+        Alert.alert('Baralho removido com sucesso!');
     }
 
     _atualizarCards() {

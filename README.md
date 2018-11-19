@@ -63,10 +63,10 @@ O app controla o agendamento do dia, ou seja,  caso não haja nenhum quiz feito 
     ├── actions # são fontes de informações que são enviadas da aplicação para a Store. São disparadas pelas Action Creators, que são simples funções que, ao serem executadas, ativam os Reducers.
         ├── cards # Informações da store  do cards
     ├── componentes # Pasta utilizada para organizar as funcionalidades do projeto
-        ├── Card # layout da pagina de card
-        ├── Cardnumber # layout da pagina de criação do quiz / Pergunta
+        ├── Baralho # layout da pagina de Baralho
+        ├── BaralhoIndividual # layout da pagina de criação do quiz / Pergunta
         ├── Footer # layout da pagina de Footer
-        ├── ListagemCard # layout de listagem dos cards
+        ├── ListagemBaralho # layout de listagem dos baralhos
         ├── Montagem # componente que faz a interligação da Listagem de Card / footer.
         ├── PerguntaCard # componente que cria a Pergunta.
         ├── QuizCard # componente que cria o Quiz.
