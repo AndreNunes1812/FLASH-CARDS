@@ -109,7 +109,7 @@ class ListagemBaralho extends Component {
                                                 {this.props.montagem === 'sim' ? (
 
                                                     <Text style={styles.textoLength}>
-                                                        {item.questions.length} baralhos
+                                                        {item.questions.length} carta(s)
                                                     </Text>
 
                                                 ) : (null)}
