@@ -74,7 +74,7 @@ class BaralhoIndividual extends Component {
             <View >
                 <Card title={this.titulo} >
                     <View >
-                        <Text>Nº de baralhos {this.questions}</Text>
+                        <Text  style={styles.texto}>Número de Cards: {this.questions}</Text>
                         <ButtonGroup
                             selectedBackgroundColor="blue"
                             onPress={(index) => {
@@ -119,7 +119,7 @@ const styles = StyleSheet.create({
         padding: 30,
     },
     texto: {
-        backgroundColor: '#2196F3',
+        justifyContent: 'center',
     },
     input: {
         height: 50

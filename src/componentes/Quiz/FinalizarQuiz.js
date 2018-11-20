@@ -10,18 +10,34 @@ import {
 
 class FinalizarQuiz extends Component {
 
+    state = {
+        totalizacao: {}
+    }
+
     componentDidMount() {
         clearLocalNotification()
         .then(setLocalNotification)
+        this.setState({totalizacao: this.props.navigation.state.params.totalizacao})        
+    }
+
+    _returnPercentage(scored, total) {
+        if (!scored){
+            return 0
+        }
+        return Math.floor((scored / total) * 100)
     }
 
     render() {
+
         return (
             <View style={styles.container}>
                 <View>
                     <Text style={styles.textoObrigado}>Obrigado!</Text>
                 </View>
                 <View><Text style={styles.texto}>Você respondeu {this.props.navigation.state.params.navegacao.numQuestao } questão(oes)</Text></View>
+                
+                <View><Text style={styles.texto}> 
+                    Aproveitamento de {this._returnPercentage(this.state.totalizacao.correto , this.props.navigation.state.params.navegacao.numQuestao)}%</Text></View>
                 <View style={styles.resultBottom}>
                     <TouchableOpacity style={[styles.button, {backgroundColor: '#fff'}]} onPress={() => {this.props.navigation.navigate('BaralhoIndividual')}}>
                         <Text style={[styles.buttonText, {color: '#000'}]}>Iniciar</Text>

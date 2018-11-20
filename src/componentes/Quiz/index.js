@@ -22,7 +22,9 @@ class QuizCard extends Component {
     titulo = null
     questions = []
     quantidade = 1
-    indexPergunta = 0
+    indexPergunta = 0    
+    correto = 0
+    inCorreto = 0
     pergunta = ''
     resposta = ''
 
@@ -57,11 +59,22 @@ class QuizCard extends Component {
 
     _respostaQuiz(resposta) {
         this.indexPergunta = this.indexPergunta + 1
+
+        if (resposta === 'sim') {
+            this.correto++           
+        } else {
+           this.inCorreto++
+        }
+
         if (this.quantidade === this.state.numQuestao) {
             this.props.navigation.push('FinalizarQuiz', {
-                navegacao: this.state
+                navegacao: this.state,
+                totalizacao: {
+                    correto: this.correto,
+                    inCorreto: this.inCorreto
+                }
             })
-        } else {
+        } else {            
             this._capturarPerguntaResposta(this.questions[this.indexPergunta])
             this.quantidade = this.quantidade + 1
         }

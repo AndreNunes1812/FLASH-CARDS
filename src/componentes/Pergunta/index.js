@@ -16,7 +16,7 @@ import {
     TouchableOpacity
 } from 'react-native'
 
-class PerguntaCard extends Component {
+class Pergunta extends Component {
 
     cards = []
     item = null
@@ -71,7 +71,12 @@ class PerguntaCard extends Component {
 
     _updateIndex() {
 
-        if (( this.infPergunta._lastNativeText === undefined ) || ( this.infResposta._lastNativeText === undefined)) {
+        if ((this.infPergunta._lastNativeText === undefined) || ( this.infResposta._lastNativeText === undefined)) {
+            this.infPergunta._lastNativeText = ''
+            this.infResposta._lastNativeText = ''
+        }
+                                                        
+        if (( this.infPergunta._lastNativeText.trim().length === 0 ) || ( this.infResposta._lastNativeText.trim().length === 0 )) {
             Alert.alert('Favor informar Pergunta / Resposta')
         } else {
             this.setState({ qtdSalva: this.state.qtdSalva + 1, infPergunta: null, infResposta: null })
@@ -177,7 +182,7 @@ const styles = StyleSheet.create({
     }
 })
 
-PerguntaCard.propTypes = {
+Pergunta.propTypes = {
     funcSetCards: PropTypes.func.isRequired,
 
 }
@@ -199,6 +204,6 @@ const mapDispatchToProps = (dispatch) => {
 export default connect(
     mapStateToProps, mapDispatchToProps
 )(reduxForm({
-    form: 'perguntaCard',
+    form: 'pergunta',
     enableReinitialize: true,
-})(PerguntaCard))
+})(Pergunta))

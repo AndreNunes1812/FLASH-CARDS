@@ -36,8 +36,8 @@ class Baralho extends Component {
     }
 
     _onPress() {  
-              
-        if(this.state.baralho.length === 0) {
+             
+        if((this.state.baralho.trim().length === 0)) {
             Alert.alert('Informar o nome do Baralho.')
         } else {
             let baralho = this.state.baralho

@@ -9,7 +9,7 @@ Criar um aplicativo para dispositivos móveis (Android ou iOS - ou ambos) que pe
 ## Especificação do projeto:
 
 #### Configuração do Projeto
-A aplicação foi criada com o create-react-app, após a aplicação criada entrar dentro do projeto gerado e digitar o comando npm install para instalar todas as dependência necessárias e após, digitar **expo start** para que a aplicação seja iniciada.<br />
+A aplicação foi criada com o create-react-native-app, após a aplicação criada entrar dentro do projeto gerado e digitar o comando npm install para instalar todas as dependência necessárias e após, digitar **expo start** para que a aplicação seja iniciada.<br />
 
 ####  Página principal 
 A página principal lista todos os cards (baralho) que foram criados, caso não tenha sido criado poderá ser feito ao clicar em adcionar baralho, caso já tenha sido criado pode-se clicar no card é o mesmo será direcionado para uma outra pagina.
